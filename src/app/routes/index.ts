@@ -5,6 +5,7 @@ import { EventRoutes } from '../modules/event/event.route';
 import { BookingRoutes } from '../modules/booking/booking.route';
 import { ReviewRoutes } from '../modules/review/review.route';
 import { BlogRoutes } from '../modules/blog/blog.route';
+import { FaqRoutes } from '../modules/faq/faq.route';
 
 const router = express.Router();
 
@@ -32,6 +33,10 @@ const moduleRoutes = [
   {
     path: '/blogs',
     route: BlogRoutes,
+  },
+  {
+    path: '/faq',
+    route: FaqRoutes,
   },
 ];
 

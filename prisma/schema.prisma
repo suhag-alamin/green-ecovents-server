@@ -25,6 +25,7 @@ model User {
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
   blogPosts BlogPost[]
+  FAQs      FAQ[]
 
   @@map("users")
 }
@@ -132,9 +133,12 @@ model BlogPost {
 }
 
 model FAQ {
-  id       Int    @id @default(autoincrement())
+  id       String @id @default(uuid())
   question String
   answer   String
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
