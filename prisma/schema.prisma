@@ -19,8 +19,8 @@ model User {
   contactNo  String    @unique
   role       UserRole  @default(USER)
   profileImg String?
-  Review     Review[]
-  Booking    Booking[]
+  reviews    Review[]
+  bookings   Booking[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -32,10 +32,11 @@ model Category {
   id   String @id @default(uuid())
   name String
 
-  events Event[]
+  // events Event[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  events    Event[]
 
   @@map("categories")
 }
@@ -49,14 +50,31 @@ model Event {
   price       Float
   image       String
 
-  reviews    Review[]
-  categories Category[]
-  Booking    Booking[]
+  categoryId String
+  categories Category @relation(fields: [categoryId], references: [id])
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  bookings  Booking[]
+  reviews   Review[]
+
+  @@map("events")
+}
+
+model Booking {
+  id     String        @id @default(uuid())
+  status BookingStatus @default(pending) // e.g., confirmed, pending, canceled
+  date   DateTime
+
+  userId  String
+  user    User   @relation(fields: [userId], references: [id])
+  eventId String
+  event   Event  @relation(fields: [eventId], references: [id])
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  @@map("events")
+  @@map("bookings")
 }
 
 model Review {
@@ -87,22 +105,6 @@ model Review {
 //   updatedAt DateTime  @updatedAt
 //   @@map("cart")
 // }
-
-model Booking {
-  id     String   @id @default(uuid())
-  status String // e.g., confirmed, pending, canceled
-  date   DateTime
-
-  userId  String
-  user    User   @relation(fields: [userId], references: [id])
-  eventId String
-  event   Event  @relation(fields: [eventId], references: [id])
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@map("bookings")
-}
 
 // model Notification {
 //  id         String   @id @default(uuid())
