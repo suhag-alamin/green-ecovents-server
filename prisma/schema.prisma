@@ -11,15 +11,23 @@ datasource db {
 }
 
 model User {
-  id        String @id @default(uuid())
-  email     String @unique
-  password  String
-  firstName String
-  lastName  String
-  // Add more user-related fields as needed
+  id         String   @id @default(uuid())
+  email      String   @unique
+  password   String
+  firstName  String
+  lastName   String
+  contactNo  String
+  role       UserRole @default(USER)
+  profileImg String?
 
-  // // Define a relation to bookings
-  // bookings  Booking[]
-  // // Define a relation to reviews
-  // reviews   Review[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("users")
+}
+
+enum UserRole {
+  SUPER_ADMIN
+  ADMIN
+  USER
 }
