@@ -15,16 +15,17 @@
     "prefer-const": "error",
     "no-unused-expressions": "error",
     "no-undef": "error",
-    "no-console": "off",
+    "no-console": "warn",
     "@typescript-eslint/consistent-type-definitions": ["error", "type"],
-    "@typescript-eslint/explicit-module-boundary-types": "off"
+    "@typescript-eslint/explicit-module-boundary-types": "off",
+    "@typescript-eslint/no-explicit-any": "warn"
   },
   "env": {
     "browser": true,
     "es2021": true,
-    "node":true
+    "node": true
   },
   "globals": {
-    "process":"readonly"
+    "process": "readonly"
   }
 }
