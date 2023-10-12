@@ -10,7 +10,6 @@ import { jwtHelpers } from '../../../helpers/jwtHelpers';
 import { Secret } from 'jsonwebtoken';
 
 const signup = async (data: User): Promise<Partial<User>> => {
-  console.log(data);
   data.password = await bcrypt.hash(
     data.password,
     Number(config.bycrypt_salt_rounds),

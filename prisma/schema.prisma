@@ -16,7 +16,7 @@ model User {
   password   String
   firstName  String
   lastName   String
-  contactNo  String
+  contactNo  String    @unique
   role       UserRole  @default(USER)
   profileImg String?
   Review     Review[]
@@ -29,8 +29,9 @@ model User {
 }
 
 model Category {
-  id     String  @id @default(uuid())
-  name   String
+  id   String @id @default(uuid())
+  name String
+
   events Event[]
 
   createdAt DateTime @default(now())
