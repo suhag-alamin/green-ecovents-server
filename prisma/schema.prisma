@@ -11,14 +11,16 @@ datasource db {
 }
 
 model User {
-  id         String   @id @default(uuid())
-  email      String   @unique
+  id         String    @id @default(uuid())
+  email      String    @unique
   password   String
   firstName  String
   lastName   String
   contactNo  String
-  role       UserRole @default(USER)
+  role       UserRole  @default(USER)
   profileImg String?
+  Review     Review[]
+  Booking    Booking[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -26,8 +28,121 @@ model User {
   @@map("users")
 }
 
+model Category {
+  id     String  @id @default(uuid())
+  name   String
+  events Event[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("categories")
+}
+
+model Event {
+  id          String   @id @default(uuid())
+  title       String
+  description String
+  date        DateTime
+  location    String
+  price       Float
+  image       String
+
+  reviews    Review[]
+  categories Category[]
+  Booking    Booking[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("events")
+}
+
+model Review {
+  id     String @id @default(uuid())
+  review String
+  rating Int
+
+  userId  String
+  user    User   @relation(fields: [userId], references: [id])
+  eventId String
+  event   Event  @relation(fields: [eventId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("reviews")
+}
+
+// model Cart {
+//   id      String @id @default(uuid())
+
+//   userId  String
+//   user    User   @relation(fields: [userId], references: [id])
+//   eventId String
+//   event   Event  @relation(fields: [eventId], references: [id])
+
+//     createdAt DateTime  @default(now())
+//   updatedAt DateTime  @updatedAt
+//   @@map("cart")
+// }
+
+model Booking {
+  id     String   @id @default(uuid())
+  status String // e.g., confirmed, pending, canceled
+  date   DateTime
+
+  userId  String
+  user    User   @relation(fields: [userId], references: [id])
+  eventId String
+  event   Event  @relation(fields: [eventId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("bookings")
+}
+
+// model Notification {
+//  id         String   @id @default(uuid())
+//   message   String
+//   type      String   // e.g., confirmation, reminder
+//   // Define a relation to user
+//   user      User     @relation(fields: [userId], references: [id])
+//   userId    Int
+// }
+
+model BlogPost {
+  id      String @id @default(uuid())
+  title   String
+  content String
+  image   String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("blog_posts")
+}
+
+model FAQ {
+  id       Int    @id @default(autoincrement())
+  question String
+  answer   String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("faqs")
+}
+
 enum UserRole {
   SUPER_ADMIN
   ADMIN
   USER
+}
+
+enum BookingStatus {
+  pending
+  confirmed
+  canceled
 }
