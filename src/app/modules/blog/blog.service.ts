@@ -1,34 +1,29 @@
-import { Event, Prisma } from '@prisma/client';
+import { BlogPost, Prisma } from '@prisma/client';
 import { paginationHelpers } from '../../../helpers/paginationHelper';
 import { IGenericResponse } from '../../../interfaces/common';
 import { IPaginationOptions } from '../../../interfaces/pagination';
 import prisma from '../../../shared/prisma';
-import { IEventFilters } from './event.interface';
-import { eventSearchableFields } from './event.constant';
+import { blogSearchableFields } from './blog.constant';
+import { IBlogFilters } from './blog.interface';
 
-const createEvent = async (data: Event): Promise<Event> => {
-  const result = await prisma.event.create({
+const createBlog = async (data: BlogPost): Promise<BlogPost> => {
+  const result = await prisma.blogPost.create({
     data,
-    include: {
-      bookings: true,
-      categories: true,
-      reviews: true,
-    },
   });
   return result;
 };
 
-const getEvents = async (
-  filters: IEventFilters,
+const getBlogs = async (
+  filters: IBlogFilters,
   paginationOptions: IPaginationOptions,
-): Promise<IGenericResponse<Event[]>> => {
+): Promise<IGenericResponse<BlogPost[]>> => {
   const { query, ...filtersData } = filters;
 
   const andConditions = [];
 
   if (query) {
     andConditions.push({
-      OR: eventSearchableFields.map(field => ({
+      OR: blogSearchableFields.map(field => ({
         [field]: {
           contains: query,
           mode: 'insensitive',
@@ -52,10 +47,10 @@ const getEvents = async (
   const { page, limit, skip, sortBy, sortOrder } =
     paginationHelpers.calculatePagination(paginationOptions);
 
-  const whereConditions: Prisma.EventWhereInput =
+  const whereConditions: Prisma.BlogPostWhereInput =
     andConditions.length > 0 ? { AND: andConditions } : {};
 
-  const result = await prisma.event.findMany({
+  const result = await prisma.blogPost.findMany({
     where: whereConditions,
     skip,
     take: limit,
@@ -67,13 +62,8 @@ const getEvents = async (
         : {
             createdAt: 'desc',
           },
-    include: {
-      bookings: true,
-      categories: true,
-      reviews: true,
-    },
   });
-  const total = await prisma.event.count();
+  const total = await prisma.blogPost.count();
 
   return {
     meta: {
@@ -85,48 +75,50 @@ const getEvents = async (
   };
 };
 
-const getSingleEvent = async (id: string): Promise<Event | null> => {
-  const result = await prisma.event.findUnique({
+const getSingleBlog = async (id: string): Promise<BlogPost | null> => {
+  const result = await prisma.blogPost.findUnique({
     where: {
       id,
-    },
-    include: {
-      bookings: true,
-      categories: true,
-      reviews: true,
     },
   });
   return result;
 };
 
-const updateEvent = async (id: string, data: Event): Promise<Event | null> => {
-  const result = await prisma.event.update({
+const updateBlog = async (
+  id: string,
+  data: BlogPost,
+): Promise<BlogPost | null> => {
+  const result = await prisma.blogPost.update({
     where: {
       id,
     },
     data,
-    include: {
-      bookings: true,
-      categories: true,
-      reviews: true,
-    },
   });
   return result;
 };
 
-const deleteEvent = async (id: string): Promise<Event | null> => {
-  const result = await prisma.event.delete({
+const deleteBlog = async (id: string): Promise<BlogPost | null> => {
+  const result = await prisma.blogPost.delete({
     where: {
       id,
     },
   });
   return result;
 };
+const getBlogsByUser = async (userId: string): Promise<BlogPost[] | null> => {
+  const result = await prisma.blogPost.findMany({
+    where: {
+      userId,
+    },
+  });
+  return result;
+};
 
-export const EventService = {
-  createEvent,
-  getEvents,
-  getSingleEvent,
-  updateEvent,
-  deleteEvent,
+export const BlogService = {
+  createBlog,
+  getBlogs,
+  getSingleBlog,
+  updateBlog,
+  deleteBlog,
+  getBlogsByUser,
 };

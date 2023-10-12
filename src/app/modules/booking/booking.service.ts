@@ -9,7 +9,6 @@ const createBooking = async (data: Booking): Promise<Booking> => {
   const result = await prisma.booking.create({
     data,
     include: {
-      user: true,
       event: true,
     },
   });

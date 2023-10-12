@@ -9,6 +9,7 @@ import { paginationHelpers } from '../../../helpers/paginationHelper';
 const createCategory = async (data: Category): Promise<Category> => {
   const result = await prisma.category.create({
     data,
+    include: { events: true },
   });
   return result;
 };
@@ -62,6 +63,7 @@ const getCategories = async (
         : {
             createdAt: 'desc',
           },
+    include: { events: true },
   });
   const total = await prisma.category.count();
 
@@ -80,6 +82,7 @@ const getSingleCategory = async (id: string): Promise<Category | null> => {
     where: {
       id,
     },
+    include: { events: true },
   });
   return result;
 };
@@ -93,6 +96,7 @@ const updateCategory = async (
       id,
     },
     data,
+    include: { events: true },
   });
   return result;
 };

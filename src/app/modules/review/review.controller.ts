@@ -29,7 +29,6 @@ const getReviewsController = catchAsync(async (req: Request, res: Response) => {
 });
 const getSingleReviewController = catchAsync(
   async (req: Request, res: Response) => {
-    console.log('hitting');
     const result = await ReviewService.getSingleReview(req.params.id);
 
     sendResponse<Review | null>(res, {

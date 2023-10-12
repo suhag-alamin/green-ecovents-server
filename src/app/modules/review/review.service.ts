@@ -5,7 +5,7 @@ const createReview = async (data: Review): Promise<Review> => {
   const result = await prisma.review.create({
     data,
     include: {
-      user: true,
+      event: true,
     },
   });
   return result;
@@ -17,7 +17,7 @@ const getReviews = async (): Promise<Review[]> => {
       createdAt: 'desc',
     },
     include: {
-      user: true,
+      event: true,
     },
   });
   return result;
@@ -29,7 +29,7 @@ const getSingleReview = async (id: string): Promise<Review | null> => {
       id,
     },
     include: {
-      user: true,
+      event: true,
     },
   });
   return result;
@@ -45,7 +45,7 @@ const updateReview = async (
     },
     data,
     include: {
-      user: true,
+      event: true,
     },
   });
   return result;
@@ -68,19 +68,18 @@ const getReviewsByEventId = async (
       eventId,
     },
     include: {
-      user: true,
+      event: true,
     },
   });
   return result;
 };
 const getReviewsByUser = async (userId: string): Promise<Review[] | null> => {
-  console.log(userId);
   const result = await prisma.review.findMany({
     where: {
       userId,
     },
     include: {
-      user: true,
+      event: true,
     },
   });
   return result;
