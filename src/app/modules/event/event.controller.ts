@@ -20,22 +20,20 @@ const createEventController = catchAsync(
     });
   },
 );
-const getCategoriesController = catchAsync(
-  async (req: Request, res: Response) => {
-    const filters = pick(req.query, eventFilterableFields);
-    const paginationOptions = pick(req.query, paginationFields);
+const getEventsController = catchAsync(async (req: Request, res: Response) => {
+  const filters = pick(req.query, eventFilterableFields);
+  const paginationOptions = pick(req.query, paginationFields);
 
-    const result = await EventService.getEvents(filters, paginationOptions);
+  const result = await EventService.getEvents(filters, paginationOptions);
 
-    sendResponse<Event[]>(res, {
-      statusCode: httpStatus.OK,
-      success: true,
-      message: 'Events retrieved successfully!',
-      meta: result.meta,
-      data: result.data,
-    });
-  },
-);
+  sendResponse<Event[]>(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Events retrieved successfully!',
+    meta: result.meta,
+    data: result.data,
+  });
+});
 const getSingleEventController = catchAsync(
   async (req: Request, res: Response) => {
     const result = await EventService.getSingleEvent(req.params.id);
@@ -77,7 +75,7 @@ const deleteEventController = catchAsync(
 
 export const EventController = {
   createEventController,
-  getCategoriesController,
+  getEventsController,
   getSingleEventController,
   updateEventController,
   deleteEventController,

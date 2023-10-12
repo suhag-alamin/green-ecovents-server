@@ -80,7 +80,7 @@ model Booking {
 model Review {
   id     String @id @default(uuid())
   review String
-  rating Int
+  rating Float
 
   userId  String
   user    User   @relation(fields: [userId], references: [id])
