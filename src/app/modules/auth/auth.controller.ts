@@ -5,7 +5,7 @@ import sendResponse from '../../../shared/sendResponse';
 import { User } from '@prisma/client';
 import httpStatus from 'http-status';
 import config from '../../../config';
-import { ILoginUserResponse } from './auth.interface';
+import { ILoginUserResponse, IRefreshTokenResponse } from './auth.interface';
 
 const signupController = catchAsync(async (req: Request, res: Response) => {
   const result = await AuthService.signup(req.body);
@@ -13,7 +13,7 @@ const signupController = catchAsync(async (req: Request, res: Response) => {
   sendResponse<Partial<User>>(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'Signed up successfully!',
+    message: 'Signed up successfully! Please login',
     data: result,
   });
 });
@@ -39,7 +39,39 @@ const loginController = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const refreshTokenController = catchAsync(
+  async (req: Request, res: Response) => {
+    const { refreshToken } = req.cookies;
+
+    const result = await AuthService.refreshToken(refreshToken);
+
+    sendResponse<IRefreshTokenResponse>(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: 'User logged in successfully',
+      data: result,
+    });
+  },
+);
+
+const changePasswordController = catchAsync(
+  async (req: Request, res: Response) => {
+    const user = req.user;
+    const { ...passwordData } = req.body;
+
+    await AuthService.changePassword(user, passwordData);
+
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: 'Password Changed successfully',
+    });
+  },
+);
+
 export const AuthController = {
   signupController,
   loginController,
+  refreshTokenController,
+  changePasswordController,
 };
