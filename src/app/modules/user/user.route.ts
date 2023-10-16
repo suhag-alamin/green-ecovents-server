@@ -11,6 +11,7 @@ router.get(
   auth(UserRole.SUPER_ADMIN, UserRole.ADMIN, UserRole.USER),
   UserController.getProfileController,
 );
+
 router.patch(
   '/profile',
   auth(UserRole.SUPER_ADMIN, UserRole.ADMIN, UserRole.USER),

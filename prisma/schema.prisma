@@ -26,6 +26,7 @@ model User {
   updatedAt DateTime   @updatedAt
   blogPosts BlogPost[]
   FAQs      FAQ[]
+  events    Event[]
 
   @@map("users")
 }
@@ -51,6 +52,9 @@ model Event {
   location    String
   price       Float
   image       String
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
 
   categoryId String
   categories Category @relation(fields: [categoryId], references: [id])
