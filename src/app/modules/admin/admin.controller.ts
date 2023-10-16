@@ -6,6 +6,7 @@ import { AdminService } from './admin.service';
 import pick from '../../../shared/pick';
 import { paginationFields } from '../../../constants/pagination';
 import { adminFilterableFields } from './admin.constant';
+import { User } from '@prisma/client';
 
 const getAdminsController = catchAsync(async (req: Request, res: Response) => {
   const filters = pick(req.query, adminFilterableFields);
@@ -15,11 +16,22 @@ const getAdminsController = catchAsync(async (req: Request, res: Response) => {
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'Profile retrieved successfully',
+    message: 'Admins retrieved successfully',
+    meta: result.meta,
+    data: result.data,
+  });
+});
+const makeAdminController = catchAsync(async (req: Request, res: Response) => {
+  const result = await AdminService.makeAdmin(req.body);
+  sendResponse<Partial<User>>(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Admin Created successfully',
     data: result,
   });
 });
 
 export const AdminController = {
   getAdminsController,
+  makeAdminController,
 };

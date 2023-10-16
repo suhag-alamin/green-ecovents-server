@@ -5,3 +5,7 @@ export type IAdminFilters = {
   contactNo?: string;
   query?: string;
 };
+
+export type IMakeAdmin = {
+  userId: string;
+};
