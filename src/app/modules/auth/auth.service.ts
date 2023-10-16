@@ -153,12 +153,17 @@ const changePassword = async (
 
   isUserExist.password = newPassword;
 
+  const newHashPassword = await bcrypt.hash(
+    newPassword,
+    Number(config.bycrypt_salt_rounds),
+  );
+
   const result = await prisma.user.update({
     where: {
       id: user?.id,
     },
     data: {
-      password: newPassword,
+      password: newHashPassword,
     },
   });
   const newResult = excludePassword(result, ['password']);
