@@ -1,9 +1,9 @@
-import { User } from '@prisma/client';
+import { User, UserRole } from '@prisma/client';
+import httpStatus from 'http-status';
 import { JwtPayload } from 'jsonwebtoken';
+import ApiError from '../../../errors/ApiError';
 import prisma from '../../../shared/prisma';
 import { excludePassword } from '../../../shared/utils';
-import ApiError from '../../../errors/ApiError';
-import httpStatus from 'http-status';
 
 const getProfile = async (
   user: JwtPayload | null,
@@ -50,7 +50,54 @@ const updateProfile = async (
   return null;
 };
 
+const deleteUser = async (userId: string): Promise<User | null> => {
+  const result = await prisma.$transaction(async transactionClient => {
+    const isUserExist = await transactionClient.user.findUnique({
+      where: {
+        id: userId,
+        role: UserRole.USER,
+      },
+      include: {
+        bookings: true,
+        reviews: true,
+      },
+    });
+
+    if (!isUserExist) {
+      throw new ApiError(httpStatus.BAD_REQUEST, 'The user does not exist.');
+    }
+
+    // delete bookings by the user
+    await transactionClient.booking.deleteMany({
+      where: {
+        userId: isUserExist.id,
+      },
+    });
+
+    // delete reviews by the user
+    await transactionClient.review.deleteMany({
+      where: {
+        userId: isUserExist.id,
+      },
+    });
+
+    const user = await transactionClient.user.delete({
+      where: {
+        id: isUserExist.id,
+      },
+    });
+
+    return user;
+  });
+  if (result) {
+    return result;
+  }
+
+  throw new ApiError(httpStatus.BAD_REQUEST, 'Unable to delete user');
+};
+
 export const UserService = {
   getProfile,
   updateProfile,
+  deleteUser,
 };

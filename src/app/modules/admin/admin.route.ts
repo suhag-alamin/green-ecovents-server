@@ -18,5 +18,10 @@ router.get(
   auth(UserRole.SUPER_ADMIN),
   AdminController.getAdminsController,
 );
+router.delete(
+  '/:id',
+  auth(UserRole.SUPER_ADMIN),
+  AdminController.deleteAdminController,
+);
 
 export const AdminRoutes = router;

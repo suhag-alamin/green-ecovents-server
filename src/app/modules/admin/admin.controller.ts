@@ -30,8 +30,20 @@ const makeAdminController = catchAsync(async (req: Request, res: Response) => {
     data: result,
   });
 });
+const deleteAdminController = catchAsync(
+  async (req: Request, res: Response) => {
+    const result = await AdminService.deleteAdmin(req.params.id);
+    sendResponse<User>(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: 'Admin Deleted successfully',
+      data: result,
+    });
+  },
+);
 
 export const AdminController = {
   getAdminsController,
   makeAdminController,
+  deleteAdminController,
 };

@@ -11,22 +11,22 @@ datasource db {
 }
 
 model User {
-  id         String    @id @default(uuid())
-  email      String    @unique
+  id         String     @id @default(uuid())
+  email      String     @unique
   password   String
   firstName  String
   lastName   String
-  contactNo  String    @unique
-  role       UserRole  @default(USER)
+  contactNo  String     @unique
+  role       UserRole   @default(USER)
   profileImg String?
   reviews    Review[]
   bookings   Booking[]
+  blogPosts  BlogPost[]
+  FAQs       FAQ[]
+  events     Event[]
 
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
-  blogPosts BlogPost[]
-  FAQs      FAQ[]
-  events    Event[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@map("users")
 }

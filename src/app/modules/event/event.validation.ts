@@ -20,6 +20,12 @@ const createEventZodSchema = z.object({
     image: z.string({
       required_error: 'Image is required',
     }),
+    userId: z.string({
+      required_error: 'User Id is required',
+    }),
+    categoryId: z.string({
+      required_error: 'Category Id is required',
+    }),
   }),
 });
 const updateEventZodSchema = z.object({
@@ -30,6 +36,8 @@ const updateEventZodSchema = z.object({
     location: z.string({}).optional(),
     price: z.number({}).optional(),
     image: z.string({}).optional(),
+    userId: z.string({}).optional(),
+    categoryId: z.string({}).optional(),
   }),
 });
 

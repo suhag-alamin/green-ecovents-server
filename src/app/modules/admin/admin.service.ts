@@ -125,8 +125,59 @@ const makeAdmin = async (data: IMakeAdmin): Promise<Partial<User>> => {
 
   throw new ApiError(httpStatus.BAD_REQUEST, 'Unable to make admin');
 };
+const deleteAdmin = async (userId: string): Promise<User | null> => {
+  const result = await prisma.$transaction(async transactionClient => {
+    const isUserExist = await transactionClient.user.findUnique({
+      where: {
+        id: userId,
+        role: UserRole.ADMIN,
+      },
+      include: {
+        blogPosts: true,
+        events: true,
+        FAQs: true,
+      },
+    });
+
+    if (!isUserExist) {
+      throw new ApiError(httpStatus.BAD_REQUEST, 'The user does not exist.');
+    }
+
+    await transactionClient.event.deleteMany({
+      where: {
+        userId: isUserExist.id,
+      },
+    });
+
+    await transactionClient.blogPost.deleteMany({
+      where: {
+        userId: isUserExist.id,
+      },
+    });
+    // delete faqs by the user
+    await transactionClient.fAQ.deleteMany({
+      where: {
+        userId: isUserExist.id,
+      },
+    });
+
+    const user = await transactionClient.user.delete({
+      where: {
+        id: isUserExist.id,
+      },
+    });
+
+    return user;
+  });
+  if (result) {
+    return result;
+  }
+
+  throw new ApiError(httpStatus.BAD_REQUEST, 'Unable to delete admin');
+};
 
 export const AdminService = {
   getAdmins,
   makeAdmin,
+  deleteAdmin,
 };
