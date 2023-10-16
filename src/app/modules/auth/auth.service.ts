@@ -151,6 +151,18 @@ const changePassword = async (
     );
   }
 
+  // check password
+
+  if (
+    isUserExist.password &&
+    (await isPasswordMatch(newPassword, isUserExist.password))
+  ) {
+    throw new ApiError(
+      httpStatus.UNAUTHORIZED,
+      'Current password can not be same as old password!',
+    );
+  }
+
   isUserExist.password = newPassword;
 
   const newHashPassword = await bcrypt.hash(
