@@ -1,12 +1,12 @@
+import { User } from '@prisma/client';
 import { Request, Response } from 'express';
 import httpStatus from 'http-status';
-import catchAsync from '../../../shared/catchAsync';
-import sendResponse from '../../../shared/sendResponse';
-import { AdminService } from './admin.service';
-import pick from '../../../shared/pick';
 import { paginationFields } from '../../../constants/pagination';
+import catchAsync from '../../../shared/catchAsync';
+import pick from '../../../shared/pick';
+import sendResponse from '../../../shared/sendResponse';
 import { adminFilterableFields } from './admin.constant';
-import { User } from '@prisma/client';
+import { AdminService } from './admin.service';
 
 const getAdminsController = catchAsync(async (req: Request, res: Response) => {
   const filters = pick(req.query, adminFilterableFields);
@@ -22,12 +22,11 @@ const getAdminsController = catchAsync(async (req: Request, res: Response) => {
   });
 });
 const makeAdminController = catchAsync(async (req: Request, res: Response) => {
-  const result = await AdminService.makeAdmin(req.body);
+  await AdminService.makeAdmin(req.body);
   sendResponse<Partial<User>>(res, {
     statusCode: httpStatus.OK,
     success: true,
     message: 'Admin Created successfully',
-    data: result,
   });
 });
 const deleteAdminController = catchAsync(
@@ -43,7 +42,6 @@ const deleteAdminController = catchAsync(
 );
 const updateAdminController = catchAsync(
   async (req: Request, res: Response) => {
-    console.log('hitting');
     const result = await AdminService.updateAdmin(req.params.id, req.body);
     sendResponse<Partial<User> | null>(res, {
       statusCode: httpStatus.OK,

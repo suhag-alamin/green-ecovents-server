@@ -6,6 +6,9 @@ export type IAdminFilters = {
   query?: string;
 };
 
+export type MakeAdminInfo = {
+  email: string;
+};
 export type IMakeAdmin = {
-  userId: string;
+  users: MakeAdminInfo[];
 };

@@ -3,9 +3,11 @@ import { z } from 'zod';
 
 const makeAdminZodSchema = z.object({
   body: z.object({
-    userId: z.string({
-      required_error: 'User id is required',
-    }),
+    users: z
+      .object({
+        email: z.string().email('provide valid email'),
+      })
+      .array(),
   }),
 });
 

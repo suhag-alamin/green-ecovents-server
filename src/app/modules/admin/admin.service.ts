@@ -4,9 +4,9 @@ import ApiError from '../../../errors/ApiError';
 import { paginationHelpers } from '../../../helpers/paginationHelper';
 import { IPaginationOptions } from '../../../interfaces/pagination';
 import prisma from '../../../shared/prisma';
-import { excludePassword } from '../../../shared/utils';
+import { asyncForEach, excludePassword } from '../../../shared/utils';
 import { adminSearchableFields } from './admin.constant';
-import { IAdminFilters, IMakeAdmin } from './admin.interface';
+import { IAdminFilters, IMakeAdmin, MakeAdminInfo } from './admin.interface';
 
 const getAdmins = async (
   filters: IAdminFilters,
@@ -89,41 +89,70 @@ const getAdmins = async (
   };
 };
 
-const makeAdmin = async (data: IMakeAdmin): Promise<Partial<User>> => {
-  const { userId } = data;
+const makeAdmin = async (data: IMakeAdmin): Promise<void> => {
+  try {
+    if (data?.users.length) {
+      await prisma.$transaction(async transactionClient => {
+        await asyncForEach(data?.users, async (user: MakeAdminInfo) => {
+          const isUserExist = await transactionClient.user.findUnique({
+            where: {
+              email: user.email,
+            },
+          });
 
-  const result = await prisma.$transaction(async transactionClient => {
-    const isUserExist = await transactionClient.user.findUnique({
-      where: {
-        id: userId,
-        role: UserRole.USER,
-      },
-    });
+          if (!isUserExist) {
+            throw new ApiError(
+              httpStatus.BAD_REQUEST,
+              'The user does not exist, to make admin, you must register first.',
+            );
+          }
 
-    if (!isUserExist) {
-      throw new ApiError(
-        httpStatus.BAD_REQUEST,
-        'The user does not exist, to make admin, you must register first.',
-      );
+          const makeAdmin = await transactionClient.user.update({
+            where: {
+              email: user.email,
+            },
+            data: {
+              role: UserRole.ADMIN,
+            },
+          });
+          return makeAdmin;
+        });
+      });
     }
-
-    const makeAdmin = await transactionClient.user.update({
-      where: {
-        id: userId,
-      },
-      data: {
-        role: UserRole.ADMIN,
-      },
-    });
-
-    return makeAdmin;
-  });
-  if (result) {
-    const newResult = excludePassword(result, ['password']);
-    return newResult;
+  } catch (error) {
+    console.log(error);
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Unable to make admin');
   }
 
-  throw new ApiError(httpStatus.BAD_REQUEST, 'Unable to make admin');
+  // const { userId } = data;
+  // const result = await prisma.$transaction(async transactionClient => {
+  //   const isUserExist = await transactionClient.user.findUnique({
+  //     where: {
+  //       id: userId,
+  //       role: UserRole.USER,
+  //     },
+  //   });
+  //   if (!isUserExist) {
+  //     throw new ApiError(
+  //       httpStatus.BAD_REQUEST,
+  //       'The user does not exist, to make admin, you must register first.',
+  //     );
+  //   }
+  //   const makeAdmin = await transactionClient.user.update({
+  //     where: {
+  //       id: userId,
+  //     },
+  //     data: {
+  //       role: UserRole.ADMIN,
+  //     },
+  //   });
+  //   return makeAdmin;
+  // });
+  // if (result) {
+  //   const newResult = excludePassword(result, ['password']);
+  //   return newResult;
+  // }
+  // throw new ApiError(httpStatus.BAD_REQUEST, 'Unable to make admin');
 };
 const deleteAdmin = async (userId: string): Promise<User | null> => {
   const result = await prisma.$transaction(async transactionClient => {

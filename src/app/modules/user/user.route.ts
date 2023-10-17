@@ -11,6 +11,11 @@ router.get(
   auth(UserRole.SUPER_ADMIN, UserRole.ADMIN, UserRole.USER),
   UserController.getProfileController,
 );
+router.get(
+  '/get-all',
+  auth(UserRole.SUPER_ADMIN, UserRole.ADMIN),
+  UserController.getAllUsersController,
+);
 
 router.patch(
   '/profile',
