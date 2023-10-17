@@ -129,6 +129,34 @@ const updateProfile = async (
   }
   return null;
 };
+const updateUser = async (
+  userId: string,
+  data: Partial<User>,
+): Promise<Partial<User> | null> => {
+  const isUserExist = await prisma.user.findUnique({
+    where: {
+      id: userId,
+    },
+  });
+
+  if (!isUserExist) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
+  }
+
+  const result = await prisma.user.update({
+    where: {
+      id: userId,
+    },
+    data,
+  });
+
+  if (result?.email) {
+    const newResult = excludePassword(result, ['password']);
+
+    return newResult;
+  }
+  return null;
+};
 
 const deleteUser = async (userId: string): Promise<User | null> => {
   const result = await prisma.$transaction(async transactionClient => {
@@ -180,5 +208,6 @@ export const UserService = {
   getProfile,
   getAllUsers,
   updateProfile,
+  updateUser,
   deleteUser,
 };

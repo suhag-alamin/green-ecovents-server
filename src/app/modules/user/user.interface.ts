@@ -3,5 +3,6 @@ export type IUserFilters = {
   firstName?: string;
   lastName?: string;
   contactNo?: string;
+  role?: string;
   query?: string;
 };

@@ -23,6 +23,12 @@ router.patch(
   validateRequest(UserValidation.updateUserZodSchema),
   UserController.updateProfileController,
 );
+router.patch(
+  '/:id',
+  auth(UserRole.SUPER_ADMIN, UserRole.ADMIN, UserRole.USER),
+  validateRequest(UserValidation.updateUserZodSchema),
+  UserController.updateUserController,
+);
 
 router.delete(
   '/:id',

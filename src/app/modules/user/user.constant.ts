@@ -10,4 +10,5 @@ export const userFilterableFields = [
   'firstName',
   'lastName',
   'contactNo',
+  'role',
 ];
