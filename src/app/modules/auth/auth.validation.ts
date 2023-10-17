@@ -1,4 +1,4 @@
-import { UserRole } from '@prisma/client';
+import { Gender, UserRole } from '@prisma/client';
 import { z } from 'zod';
 
 const signupZodSchema = z.object({
@@ -27,6 +27,9 @@ const signupZodSchema = z.object({
         required_error: 'User role is required',
       })
       .default(UserRole.USER),
+    gender: z.enum([...Object.values(Gender)] as [string, ...string[]], {
+      required_error: 'Gender is required',
+    }),
   }),
 });
 const loginZodSchema = z.object({

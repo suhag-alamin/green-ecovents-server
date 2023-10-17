@@ -175,9 +175,36 @@ const deleteAdmin = async (userId: string): Promise<User | null> => {
 
   throw new ApiError(httpStatus.BAD_REQUEST, 'Unable to delete admin');
 };
+const updateAdmin = async (
+  userId: string,
+  data: Partial<User>,
+): Promise<Partial<User> | null> => {
+  const isUserExist = await prisma.user.findUnique({
+    where: {
+      id: userId,
+      role: UserRole.ADMIN,
+    },
+  });
+
+  if (!isUserExist) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'The user does not exist.');
+  }
+  const result = await prisma.user.update({
+    where: {
+      id: userId,
+      role: UserRole.ADMIN,
+    },
+    data,
+  });
+
+  const newResult = excludePassword(result, ['password']);
+
+  return newResult;
+};
 
 export const AdminService = {
   getAdmins,
   makeAdmin,
   deleteAdmin,
+  updateAdmin,
 };

@@ -12,12 +12,19 @@ router.post(
   validateRequest(AdminValidation.makeAdminZodSchema),
   AdminController.makeAdminController,
 );
+router.patch(
+  '/:id',
+  auth(UserRole.SUPER_ADMIN),
+  validateRequest(AdminValidation.updateAdminZodSchema),
+  AdminController.updateAdminController,
+);
 
 router.get(
   '/',
   auth(UserRole.SUPER_ADMIN),
   AdminController.getAdminsController,
 );
+
 router.delete(
   '/:id',
   auth(UserRole.SUPER_ADMIN),
