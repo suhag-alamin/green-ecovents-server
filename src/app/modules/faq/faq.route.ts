@@ -9,7 +9,7 @@ const router = express.Router();
 
 router.post(
   '/',
-  auth(UserRole.ADMIN, UserRole.SUPER_ADMIN, UserRole.USER),
+  auth(UserRole.ADMIN, UserRole.SUPER_ADMIN),
   validateRequest(FaqValidation.createFaqZodSchema),
   FaqController.createFaqController,
 );

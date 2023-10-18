@@ -188,6 +188,12 @@ const deleteUser = async (userId: string): Promise<User | null> => {
         userId: isUserExist.id,
       },
     });
+    // delete feedback by the user
+    await transactionClient.feedback.deleteMany({
+      where: {
+        userId: isUserExist.id,
+      },
+    });
 
     const user = await transactionClient.user.delete({
       where: {
