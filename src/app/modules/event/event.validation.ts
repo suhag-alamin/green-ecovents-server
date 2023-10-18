@@ -8,8 +8,11 @@ const createEventZodSchema = z.object({
     description: z.string({
       required_error: 'Description is required',
     }),
-    date: z.string({
-      required_error: 'Date is required',
+    startDate: z.string({
+      required_error: 'Start Date is required',
+    }),
+    endDate: z.string({
+      required_error: 'End Date is required',
     }),
     location: z.string({
       required_error: 'Location is required',
@@ -32,7 +35,8 @@ const updateEventZodSchema = z.object({
   body: z.object({
     title: z.string({}).optional(),
     description: z.string({}).optional(),
-    date: z.date({}).optional(),
+    startDate: z.date({}).optional(),
+    endDate: z.date({}).optional(),
     location: z.string({}).optional(),
     price: z.number({}).optional(),
     image: z.string({}).optional(),

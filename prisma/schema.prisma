@@ -33,14 +33,12 @@ model User {
 }
 
 model Category {
-  id   String @id @default(uuid())
-  name String
-
-  // events Event[]
+  id     String  @id @default(uuid())
+  name   String  @unique
+  events Event[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  events    Event[]
 
   @@map("categories")
 }
@@ -49,7 +47,8 @@ model Event {
   id          String   @id @default(uuid())
   title       String
   description String
-  date        DateTime
+  sartDate    DateTime
+  endDate     DateTime
   location    String
   price       Float
   image       String

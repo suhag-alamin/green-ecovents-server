@@ -1,10 +1,12 @@
 import { Event, Prisma } from '@prisma/client';
+import httpStatus from 'http-status';
+import ApiError from '../../../errors/ApiError';
 import { paginationHelpers } from '../../../helpers/paginationHelper';
 import { IGenericResponse } from '../../../interfaces/common';
 import { IPaginationOptions } from '../../../interfaces/pagination';
 import prisma from '../../../shared/prisma';
-import { IEventFilters } from './event.interface';
 import { eventSearchableFields } from './event.constant';
+import { IEventFilters } from './event.interface';
 
 const createEvent = async (data: Event): Promise<Event> => {
   const result = await prisma.event.create({
@@ -115,12 +117,54 @@ const updateEvent = async (id: string, data: Event): Promise<Event | null> => {
 };
 
 const deleteEvent = async (id: string): Promise<Event | null> => {
-  const result = await prisma.event.delete({
-    where: {
-      id,
-    },
+  // const result = await prisma.event.delete({
+  //   where: {
+  //     id,
+  //   },
+  // });
+  // return result;
+
+  const result = await prisma.$transaction(async transactionClient => {
+    const isEventExist = await transactionClient.event.findUnique({
+      where: {
+        id,
+      },
+      include: {
+        bookings: true,
+        reviews: true,
+      },
+    });
+
+    if (!isEventExist) {
+      throw new ApiError(httpStatus.BAD_REQUEST, 'The event does not exist.');
+    }
+
+    // delete bookings by the category
+    await transactionClient.booking.deleteMany({
+      where: {
+        eventId: isEventExist.id,
+      },
+    });
+    // delete reviews by the category
+    await transactionClient.review.deleteMany({
+      where: {
+        eventId: isEventExist.id,
+      },
+    });
+
+    const event = await transactionClient.event.delete({
+      where: {
+        id: isEventExist.id,
+      },
+    });
+
+    return event;
   });
-  return result;
+  if (result) {
+    return result;
+  }
+
+  throw new ApiError(httpStatus.BAD_REQUEST, 'Unable to delete event');
 };
 
 export const EventService = {

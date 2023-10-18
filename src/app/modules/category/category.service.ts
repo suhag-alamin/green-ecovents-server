@@ -5,6 +5,8 @@ import { ICategoryFilters } from './category.interface';
 import { IGenericResponse } from '../../../interfaces/common';
 import { categorySearchableFields } from './category.constant';
 import { paginationHelpers } from '../../../helpers/paginationHelper';
+import ApiError from '../../../errors/ApiError';
+import httpStatus from 'http-status';
 
 const createCategory = async (data: Category): Promise<Category> => {
   const result = await prisma.category.create({
@@ -102,12 +104,43 @@ const updateCategory = async (
 };
 
 const deleteCategory = async (id: string): Promise<Category | null> => {
-  const result = await prisma.category.delete({
-    where: {
-      id,
-    },
+  const result = await prisma.$transaction(async transactionClient => {
+    const isCategoryExist = await transactionClient.category.findUnique({
+      where: {
+        id,
+      },
+      include: {
+        events: true,
+      },
+    });
+
+    if (!isCategoryExist) {
+      throw new ApiError(
+        httpStatus.BAD_REQUEST,
+        'The category does not exist.',
+      );
+    }
+
+    // delete events by the category
+    await transactionClient.event.deleteMany({
+      where: {
+        categoryId: isCategoryExist.id,
+      },
+    });
+
+    const category = await transactionClient.category.delete({
+      where: {
+        id: isCategoryExist.id,
+      },
+    });
+
+    return category;
   });
-  return result;
+  if (result) {
+    return result;
+  }
+
+  throw new ApiError(httpStatus.BAD_REQUEST, 'Unable to delete category');
 };
 
 export const CategoryService = {
