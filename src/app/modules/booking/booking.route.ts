@@ -20,6 +20,11 @@ router.get(
   BookingController.getBookingsController,
 );
 router.get(
+  '/user',
+  auth(UserRole.USER),
+  BookingController.getBookingsByUserController,
+);
+router.get(
   '/:id',
   auth(UserRole.ADMIN, UserRole.SUPER_ADMIN),
   BookingController.getSingleBookingController,
@@ -29,6 +34,11 @@ router.patch(
   auth(UserRole.ADMIN, UserRole.SUPER_ADMIN),
   validateRequest(BookingValidation.updateBookingZodSchema),
   BookingController.updateBookingController,
+);
+router.patch(
+  '/user/:id',
+  auth(UserRole.USER),
+  BookingController.cancelBookingController,
 );
 router.delete(
   '/:id',

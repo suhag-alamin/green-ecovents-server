@@ -18,7 +18,7 @@ const createFaqZodSchema = z.object({
 const updateFaqZodSchema = z.object({
   body: z.object({
     question: z.string({}).optional(),
-    answer: z.number({}).max(5).min(1).optional(),
+    answer: z.string({}).optional(),
   }),
 });
 

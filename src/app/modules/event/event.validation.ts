@@ -35,8 +35,8 @@ const updateEventZodSchema = z.object({
   body: z.object({
     title: z.string({}).optional(),
     description: z.string({}).optional(),
-    startDate: z.date({}).optional(),
-    endDate: z.date({}).optional(),
+    startDate: z.string({}).optional(),
+    endDate: z.string({}).optional(),
     location: z.string({}).optional(),
     price: z.number({}).optional(),
     image: z.string({}).optional(),

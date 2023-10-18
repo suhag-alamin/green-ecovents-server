@@ -36,6 +36,29 @@ const getBookingsController = catchAsync(
     });
   },
 );
+
+const getBookingsByUserController = catchAsync(
+  async (req: Request, res: Response) => {
+    const filters = pick(req.query, bookingFilterableFields);
+    const paginationOptions = pick(req.query, paginationFields);
+    const user = req.user;
+
+    const result = await BookingService.getBookingsByUser(
+      filters,
+      paginationOptions,
+      user,
+    );
+
+    sendResponse<Booking[]>(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: 'Bookings retrieved successfully!',
+      meta: result.meta,
+      data: result.data,
+    });
+  },
+);
+
 const getSingleBookingController = catchAsync(
   async (req: Request, res: Response) => {
     const result = await BookingService.getSingleBooking(req.params.id);
@@ -61,6 +84,19 @@ const updateBookingController = catchAsync(
     });
   },
 );
+const cancelBookingController = catchAsync(
+  async (req: Request, res: Response) => {
+    const user = req.user;
+    const result = await BookingService.cancelBooking(req.params.id, user);
+
+    sendResponse<Booking>(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: 'Booking canceled successfully!',
+      data: result,
+    });
+  },
+);
 
 const deleteBookingController = catchAsync(
   async (req: Request, res: Response) => {
@@ -78,7 +114,9 @@ const deleteBookingController = catchAsync(
 export const BookingController = {
   createBookingController,
   getBookingsController,
+  getBookingsByUserController,
   getSingleBookingController,
   updateBookingController,
+  cancelBookingController,
   deleteBookingController,
 };

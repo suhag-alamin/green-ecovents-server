@@ -8,8 +8,11 @@ const createBookingZodSchema = z.object({
         required_error: 'Status is required',
       })
       .default(BookingStatus.pending),
-    date: z.string({
-      required_error: 'Date is required',
+    startDate: z.string({
+      required_error: 'Start Date is required',
+    }),
+    endDate: z.string({
+      required_error: 'End Date is required',
     }),
     userId: z.string({
       required_error: 'User id is required',
@@ -25,7 +28,8 @@ const updateBookingZodSchema = z.object({
       .enum([...Object.values(BookingStatus)] as [string, ...string[]], {})
       .optional(),
     description: z.string({}).optional(),
-    date: z.date({}).optional(),
+    startDate: z.string({}).optional(),
+    endDate: z.string({}).optional(),
     userId: z.string({}).optional(),
     eventId: z.string({}).optional(),
   }),

@@ -47,7 +47,7 @@ model Event {
   id          String   @id @default(uuid())
   title       String
   description String
-  sartDate    DateTime
+  startDate   DateTime
   endDate     DateTime
   location    String
   price       Float
@@ -68,9 +68,10 @@ model Event {
 }
 
 model Booking {
-  id     String        @id @default(uuid())
-  status BookingStatus @default(pending) // e.g., confirmed, pending, canceled
-  date   DateTime
+  id        String        @id @default(uuid())
+  status    BookingStatus @default(pending)
+  startDate DateTime      @default("2023-11-01T07:08:57.833Z")
+  endDate   DateTime      @default("2023-11-05T07:08:57.833Z")
 
   userId  String
   user    User   @relation(fields: [userId], references: [id])
