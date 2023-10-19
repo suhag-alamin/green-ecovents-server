@@ -1,0 +1,20 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.FeedbackRoutes = void 0;
+const express_1 = __importDefault(require("express"));
+const validateRequest_1 = __importDefault(require("../../middlewares/validateRequest"));
+const auth_1 = __importDefault(require("../../middlewares/auth"));
+const client_1 = require("@prisma/client");
+const feedback_validation_1 = require("./feedback.validation");
+const feedback_controller_1 = require("./feedback.controller");
+const router = express_1.default.Router();
+router.post('/', (0, auth_1.default)(client_1.UserRole.USER), (0, validateRequest_1.default)(feedback_validation_1.FeedbackValidation.createFeedbackZodSchema), feedback_controller_1.FeedbackController.createFeedbackController);
+router.get('/user', (0, auth_1.default)(client_1.UserRole.USER), feedback_controller_1.FeedbackController.getFeedbacksByUserController);
+router.get('/', (0, auth_1.default)(client_1.UserRole.ADMIN, client_1.UserRole.SUPER_ADMIN, client_1.UserRole.USER), feedback_controller_1.FeedbackController.getFeedbacksController);
+router.get('/:id', (0, auth_1.default)(client_1.UserRole.ADMIN, client_1.UserRole.SUPER_ADMIN, client_1.UserRole.USER), feedback_controller_1.FeedbackController.getSingleFeedbackController);
+router.patch('/:id', (0, auth_1.default)(client_1.UserRole.ADMIN, client_1.UserRole.SUPER_ADMIN, client_1.UserRole.USER), (0, validateRequest_1.default)(feedback_validation_1.FeedbackValidation.updateFeedbackZodSchema), feedback_controller_1.FeedbackController.updateFeedbackController);
+router.delete('/:id', (0, auth_1.default)(client_1.UserRole.ADMIN, client_1.UserRole.SUPER_ADMIN), feedback_controller_1.FeedbackController.deleteFeedbackController);
+exports.FeedbackRoutes = router;
