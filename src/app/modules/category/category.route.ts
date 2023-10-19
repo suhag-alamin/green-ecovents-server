@@ -16,12 +16,12 @@ router.post(
 
 router.get(
   '/',
-  auth(UserRole.ADMIN, UserRole.SUPER_ADMIN),
+  // auth(UserRole.ADMIN, UserRole.SUPER_ADMIN),
   CategoryController.getCategoriesController,
 );
 router.get(
   '/:id',
-  auth(UserRole.ADMIN, UserRole.SUPER_ADMIN),
+  // auth(UserRole.ADMIN, UserRole.SUPER_ADMIN),
   CategoryController.getSingleCategoryController,
 );
 router.patch(

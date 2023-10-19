@@ -12,7 +12,7 @@ const createFeedbackController = catchAsync(
     sendResponse<Feedback>(res, {
       statusCode: httpStatus.OK,
       success: true,
-      message: 'Feedback created successfully!',
+      message: 'We got your Feedback. Thank you!',
       data: result,
     });
   },

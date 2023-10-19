@@ -45,7 +45,7 @@ model Category {
 }
 
 model Event {
-  id          String   @id @default(uuid())
+  id          String      @id @default(uuid())
   title       String
   description String
   startDate   DateTime
@@ -53,6 +53,7 @@ model Event {
   location    String
   price       Float
   image       String
+  status      EventStatus @default(upcoming)
 
   userId String
   user   User   @relation(fields: [userId], references: [id])
@@ -161,6 +162,12 @@ enum Gender {
   male
   female
   others
+}
+
+enum EventStatus {
+  upcoming
+  ongoing
+  ended
 }
 
 enum BookingStatus {

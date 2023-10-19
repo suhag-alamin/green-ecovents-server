@@ -5,7 +5,7 @@ const createBlogZodSchema = z.object({
     title: z.string({
       required_error: 'Blog name is required',
     }),
-    content: z.string({
+    content: z.any({
       required_error: 'Content is required',
     }),
     userId: z.string({
@@ -19,7 +19,7 @@ const createBlogZodSchema = z.object({
 const updateBlogZodSchema = z.object({
   body: z.object({
     title: z.string({}).optional(),
-    content: z.string({}).optional(),
+    content: z.any().optional(),
     image: z.string({}).optional(),
   }),
 });

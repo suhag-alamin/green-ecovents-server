@@ -13,6 +13,9 @@ const getFeedbacks = async (): Promise<Feedback[]> => {
     orderBy: {
       createdAt: 'desc',
     },
+    include: {
+      user: true,
+    },
   });
   return result;
 };
@@ -21,6 +24,9 @@ const getSingleFeedback = async (id: string): Promise<Feedback | null> => {
   const result = await prisma.feedback.findUnique({
     where: {
       id,
+    },
+    include: {
+      user: true,
     },
   });
   return result;
@@ -35,6 +41,9 @@ const updateFeedback = async (
       id,
     },
     data,
+    include: {
+      user: true,
+    },
   });
   return result;
 };
@@ -43,6 +52,9 @@ const deleteFeedback = async (id: string): Promise<Feedback | null> => {
   const result = await prisma.feedback.delete({
     where: {
       id,
+    },
+    include: {
+      user: true,
     },
   });
   return result;
@@ -54,6 +66,9 @@ const getFeedbacksByUser = async (
   const result = await prisma.feedback.findMany({
     where: {
       userId,
+    },
+    include: {
+      user: true,
     },
   });
   return result;

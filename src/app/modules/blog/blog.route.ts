@@ -22,12 +22,12 @@ router.get(
 
 router.get(
   '/',
-  auth(UserRole.ADMIN, UserRole.SUPER_ADMIN),
+  // auth(UserRole.ADMIN, UserRole.SUPER_ADMIN, UserRole.USER),
   BlogController.getBlogsController,
 );
 router.get(
   '/:id',
-  auth(UserRole.ADMIN, UserRole.SUPER_ADMIN),
+  // auth(UserRole.ADMIN, UserRole.SUPER_ADMIN, UserRole.USER),
   BlogController.getSingleBlogController,
 );
 router.patch(
