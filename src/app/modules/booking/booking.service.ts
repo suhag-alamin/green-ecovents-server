@@ -90,11 +90,16 @@ const getBookingsByUser = async (
       userId: user?.id,
     },
   });
-  andConditions.push({
-    AND: {
-      status: BookingStatus.pending || BookingStatus.confirmed,
-    },
-  });
+  // andConditions.push({
+  //   OR: [
+  //     {
+  //       status: BookingStatus.pending,
+  //     },
+  //     {
+  //       status: BookingStatus.confirmed,
+  //     },
+  //   ],
+  // });
 
   if (Object.keys(filtersData).length) {
     andConditions.push({
@@ -132,6 +137,7 @@ const getBookingsByUser = async (
         include: {
           categories: true,
           reviews: true,
+          bookings: true,
         },
       },
     },

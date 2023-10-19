@@ -15,7 +15,8 @@ const createBookingController = catchAsync(
     sendResponse<Booking>(res, {
       statusCode: httpStatus.OK,
       success: true,
-      message: 'Booking created successfully!',
+      message:
+        'Booking confirmed successfully! Please bring the money on the venue. Thanks!',
       data: result,
     });
   },

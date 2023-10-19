@@ -9,7 +9,7 @@ const router = express.Router();
 
 router.post(
   '/',
-  auth(UserRole.ADMIN, UserRole.SUPER_ADMIN),
+  auth(UserRole.ADMIN, UserRole.SUPER_ADMIN, UserRole.USER),
   validateRequest(BookingValidation.createBookingZodSchema),
   BookingController.createBookingController,
 );

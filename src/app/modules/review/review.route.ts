@@ -16,7 +16,7 @@ router.post(
 
 router.get(
   '/user',
-  auth(UserRole.ADMIN, UserRole.SUPER_ADMIN, UserRole.USER),
+  // auth(UserRole.ADMIN, UserRole.SUPER_ADMIN, UserRole.USER),
   ReviewController.getReviewsByUserController,
 );
 

@@ -10,7 +10,10 @@ const app: Application = express();
 
 app.use(
   cors({
-    origin: ['http://localhost:3000'],
+    origin: [
+      'https://green-ecovents-client.vercel.app',
+      'http://localhost:3000',
+    ],
     credentials: true,
   }),
 );

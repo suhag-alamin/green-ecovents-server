@@ -69,6 +69,7 @@ const getReviewsByEventId = async (
     },
     include: {
       event: true,
+      user: true,
     },
   });
   return result;
