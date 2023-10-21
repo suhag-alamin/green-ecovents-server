@@ -72,6 +72,7 @@ const getReviewsByEventId = (eventId) => __awaiter(void 0, void 0, void 0, funct
         },
         include: {
             event: true,
+            user: true,
         },
     });
     return result;

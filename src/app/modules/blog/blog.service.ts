@@ -80,6 +80,9 @@ const getSingleBlog = async (id: string): Promise<BlogPost | null> => {
     where: {
       id,
     },
+    include: {
+      user: true
+    }
   });
   return result;
 };

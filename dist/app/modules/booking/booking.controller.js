@@ -25,7 +25,7 @@ const createBookingController = (0, catchAsync_1.default)((req, res) => __awaite
     (0, sendResponse_1.default)(res, {
         statusCode: http_status_1.default.OK,
         success: true,
-        message: 'Booking created successfully!',
+        message: 'Booking confirmed successfully! Please bring the money on the venue. Thanks!',
         data: result,
     });
 }));

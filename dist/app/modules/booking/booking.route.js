@@ -11,7 +11,7 @@ const client_1 = require("@prisma/client");
 const event_validation_1 = require("./event.validation");
 const booking_controller_1 = require("./booking.controller");
 const router = express_1.default.Router();
-router.post('/', (0, auth_1.default)(client_1.UserRole.ADMIN, client_1.UserRole.SUPER_ADMIN), (0, validateRequest_1.default)(event_validation_1.BookingValidation.createBookingZodSchema), booking_controller_1.BookingController.createBookingController);
+router.post('/', (0, auth_1.default)(client_1.UserRole.ADMIN, client_1.UserRole.SUPER_ADMIN, client_1.UserRole.USER), (0, validateRequest_1.default)(event_validation_1.BookingValidation.createBookingZodSchema), booking_controller_1.BookingController.createBookingController);
 router.get('/', (0, auth_1.default)(client_1.UserRole.ADMIN, client_1.UserRole.SUPER_ADMIN), booking_controller_1.BookingController.getBookingsController);
 router.get('/user', (0, auth_1.default)(client_1.UserRole.USER), booking_controller_1.BookingController.getBookingsByUserController);
 router.get('/:id', (0, auth_1.default)(client_1.UserRole.ADMIN, client_1.UserRole.SUPER_ADMIN), booking_controller_1.BookingController.getSingleBookingController);

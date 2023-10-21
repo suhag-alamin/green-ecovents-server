@@ -92,11 +92,16 @@ const getBookingsByUser = (filters, paginationOptions, user) => __awaiter(void 0
             userId: user === null || user === void 0 ? void 0 : user.id,
         },
     });
-    andConditions.push({
-        AND: {
-            status: client_1.BookingStatus.pending || client_1.BookingStatus.confirmed,
-        },
-    });
+    // andConditions.push({
+    //   OR: [
+    //     {
+    //       status: BookingStatus.pending,
+    //     },
+    //     {
+    //       status: BookingStatus.confirmed,
+    //     },
+    //   ],
+    // });
     if (Object.keys(filtersData).length) {
         andConditions.push({
             AND: Object.keys(filtersData).map(key => {
@@ -128,6 +133,7 @@ const getBookingsByUser = (filters, paginationOptions, user) => __awaiter(void 0
                 include: {
                     categories: true,
                     reviews: true,
+                    bookings: true,
                 },
             },
         },
