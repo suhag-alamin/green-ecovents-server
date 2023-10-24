@@ -65,7 +65,9 @@ const getBookings = async (
       },
     },
   });
-  const total = await prisma.booking.count();
+  const total = await prisma.booking.count({
+    where: whereConditions,
+  });
 
   return {
     meta: {
@@ -142,7 +144,9 @@ const getBookingsByUser = async (
       },
     },
   });
-  const total = await prisma.booking.count();
+  const total = await prisma.booking.count({
+    where: whereConditions,
+  });
 
   return {
     meta: {

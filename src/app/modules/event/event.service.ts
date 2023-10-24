@@ -75,7 +75,9 @@ const getEvents = async (
       reviews: true,
     },
   });
-  const total = await prisma.event.count();
+  const total = await prisma.event.count({
+    where: whereConditions,
+  });
 
   return {
     meta: {

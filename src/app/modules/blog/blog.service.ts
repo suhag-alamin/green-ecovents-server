@@ -63,7 +63,9 @@ const getBlogs = async (
             createdAt: 'desc',
           },
   });
-  const total = await prisma.blogPost.count();
+  const total = await prisma.blogPost.count({
+    where: whereConditions,
+  });
 
   return {
     meta: {
@@ -81,8 +83,8 @@ const getSingleBlog = async (id: string): Promise<BlogPost | null> => {
       id,
     },
     include: {
-      user: true
-    }
+      user: true,
+    },
   });
   return result;
 };

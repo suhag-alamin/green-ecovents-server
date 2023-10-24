@@ -69,7 +69,9 @@ const getAdmins = async (
       events: true,
     },
   });
-  const total = await prisma.user.count();
+  const total = await prisma.user.count({
+    where: whereConditions,
+  });
 
   const newResult = [];
 

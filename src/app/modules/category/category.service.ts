@@ -67,7 +67,9 @@ const getCategories = async (
           },
     include: { events: true },
   });
-  const total = await prisma.category.count();
+  const total = await prisma.category.count({
+    where: whereConditions,
+  });
 
   return {
     meta: {
