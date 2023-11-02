@@ -22,7 +22,7 @@ const sendMailController = (0, catchAsync_1.default)((req, res) => __awaiter(voi
     (0, sendResponse_1.default)(res, {
         statusCode: http_status_1.default.OK,
         success: true,
-        message: 'We got your message. Thank you!',
+        message: 'We got your message. We will get back to you soon. Thank you!',
         data: result,
     });
 }));

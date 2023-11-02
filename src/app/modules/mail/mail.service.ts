@@ -26,17 +26,13 @@ const sendMail = async (data: IMail) => {
       <p><strong>Message:</strong> ${data.message}</p>
     `,
   };
-  await transporter.sendMail(mailOptions, (err, info) => {
-    if (err) {
-      throw new ApiError(httpStatus.BAD_REQUEST, 'Something went wrong');
-    } else {
-      if (info.messageId) {
-        return {
-          sent: true,
-        };
-      }
-    }
-  });
+  const info = await transporter.sendMail(mailOptions);
+  if (!info) {
+    throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, 'Email not sent');
+  }
+  if (info.messageId) {
+    return { sent: true };
+  }
 };
 
 export const MailService = { sendMail };

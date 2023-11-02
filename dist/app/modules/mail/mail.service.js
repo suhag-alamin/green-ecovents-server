@@ -38,17 +38,12 @@ const sendMail = (data) => __awaiter(void 0, void 0, void 0, function* () {
       <p><strong>Message:</strong> ${data.message}</p>
     `,
     };
-    yield transporter.sendMail(mailOptions, (err, info) => {
-        if (err) {
-            throw new ApiError_1.default(http_status_1.default.BAD_REQUEST, 'Something went wrong');
-        }
-        else {
-            if (info.messageId) {
-                return {
-                    sent: true,
-                };
-            }
-        }
-    });
+    const info = yield transporter.sendMail(mailOptions);
+    if (!info) {
+        throw new ApiError_1.default(http_status_1.default.INTERNAL_SERVER_ERROR, 'Email not sent');
+    }
+    if (info.messageId) {
+        return { sent: true };
+    }
 });
 exports.MailService = { sendMail };
