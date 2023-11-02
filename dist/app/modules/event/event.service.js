@@ -83,7 +83,9 @@ const getEvents = (filters, paginationOptions) => __awaiter(void 0, void 0, void
             reviews: true,
         },
     });
-    const total = yield prisma_1.default.event.count();
+    const total = yield prisma_1.default.event.count({
+        where: whereConditions,
+    });
     return {
         meta: {
             total,

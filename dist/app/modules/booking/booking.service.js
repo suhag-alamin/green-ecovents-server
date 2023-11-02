@@ -74,7 +74,9 @@ const getBookings = (filters, paginationOptions) => __awaiter(void 0, void 0, vo
             },
         },
     });
-    const total = yield prisma_1.default.booking.count();
+    const total = yield prisma_1.default.booking.count({
+        where: whereConditions,
+    });
     return {
         meta: {
             total,
@@ -138,7 +140,9 @@ const getBookingsByUser = (filters, paginationOptions, user) => __awaiter(void 0
             },
         },
     });
-    const total = yield prisma_1.default.booking.count();
+    const total = yield prisma_1.default.booking.count({
+        where: whereConditions,
+    });
     return {
         meta: {
             total,

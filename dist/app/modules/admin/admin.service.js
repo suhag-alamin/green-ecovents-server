@@ -79,7 +79,9 @@ const getAdmins = (filters, paginationOptions) => __awaiter(void 0, void 0, void
             events: true,
         },
     });
-    const total = yield prisma_1.default.user.count();
+    const total = yield prisma_1.default.user.count({
+        where: whereConditions,
+    });
     const newResult = [];
     for (let i = 0; i < result.length; i++) {
         const user = result[i];

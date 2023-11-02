@@ -75,7 +75,9 @@ const getCategories = (filters, paginationOptions) => __awaiter(void 0, void 0, 
             },
         include: { events: true },
     });
-    const total = yield prisma_1.default.category.count();
+    const total = yield prisma_1.default.category.count({
+        where: whereConditions,
+    });
     return {
         meta: {
             total,

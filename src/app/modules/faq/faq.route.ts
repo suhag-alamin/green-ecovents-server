@@ -22,13 +22,13 @@ router.get(
 
 router.get(
   '/',
-  auth(UserRole.ADMIN, UserRole.SUPER_ADMIN, UserRole.USER),
+
   FaqController.getFaqsController,
 );
 
 router.get(
   '/:id',
-  auth(UserRole.ADMIN, UserRole.SUPER_ADMIN, UserRole.USER),
+
   FaqController.getSingleFaqController,
 );
 router.patch(

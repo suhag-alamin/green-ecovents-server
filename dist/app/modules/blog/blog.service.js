@@ -71,7 +71,9 @@ const getBlogs = (filters, paginationOptions) => __awaiter(void 0, void 0, void 
                 createdAt: 'desc',
             },
     });
-    const total = yield prisma_1.default.blogPost.count();
+    const total = yield prisma_1.default.blogPost.count({
+        where: whereConditions,
+    });
     return {
         meta: {
             total,
@@ -85,6 +87,9 @@ const getSingleBlog = (id) => __awaiter(void 0, void 0, void 0, function* () {
     const result = yield prisma_1.default.blogPost.findUnique({
         where: {
             id,
+        },
+        include: {
+            user: true,
         },
     });
     return result;
