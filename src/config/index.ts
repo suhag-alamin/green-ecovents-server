@@ -15,4 +15,9 @@ export default {
     refresh_secret: process.env.JWT_REFRESH_SECRET,
     refresh_expires_in: process.env.JWT_REFRESH_EXPIRATION,
   },
+  email: {
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS,
+    to_email: process.env.TO_EMAIL,
+  },
 };
