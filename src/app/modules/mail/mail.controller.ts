@@ -10,7 +10,7 @@ const sendMailController = catchAsync(async (req: Request, res: Response) => {
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'We got your message. Thank you!',
+    message: 'We got your message. We will get back to you soon. Thank you!',
     data: result,
   });
 });
