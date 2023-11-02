@@ -14,6 +14,7 @@ const faq_route_1 = require("../modules/faq/faq.route");
 const user_route_1 = require("../modules/user/user.route");
 const admin_route_1 = require("../modules/admin/admin.route");
 const feedback_route_1 = require("../modules/feedback/feedback.route");
+const mail_route_1 = require("../modules/mail/mail.route");
 const router = express_1.default.Router();
 const moduleRoutes = [
     {
@@ -55,6 +56,10 @@ const moduleRoutes = [
     {
         path: '/feedbacks',
         route: feedback_route_1.FeedbackRoutes,
+    },
+    {
+        path: '/mail',
+        route: mail_route_1.MailRoutes,
     },
 ];
 moduleRoutes.forEach(route => router.use(route.path, route.route));
