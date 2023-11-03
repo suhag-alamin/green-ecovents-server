@@ -29,6 +29,7 @@ model User {
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
   feedbacks Feedback[]
+  pages     Pages[]
 
   @@map("users")
 }
@@ -150,6 +151,20 @@ model Feedback {
   updatedAt DateTime @updatedAt
 
   @@map("feedback")
+}
+
+model Pages {
+  id      String @id @default(uuid())
+  title   String
+  content String
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("pages")
 }
 
 enum UserRole {

@@ -14,9 +14,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.MailService = void 0;
 const http_status_1 = __importDefault(require("http-status"));
+const nodemailer_1 = __importDefault(require("nodemailer"));
 const config_1 = __importDefault(require("../../../config"));
 const ApiError_1 = __importDefault(require("../../../errors/ApiError"));
-const nodemailer_1 = __importDefault(require("nodemailer"));
 const sendMail = (data) => __awaiter(void 0, void 0, void 0, function* () {
     const transporter = nodemailer_1.default.createTransport({
         service: 'gmail',
@@ -43,6 +43,22 @@ const sendMail = (data) => __awaiter(void 0, void 0, void 0, function* () {
         throw new ApiError_1.default(http_status_1.default.INTERNAL_SERVER_ERROR, 'Email not sent');
     }
     if (info.messageId) {
+        // send auto reply to user
+        const mailOptions = {
+            from: config_1.default.email.to_email,
+            to: data.email,
+            subject: `Thank you for contacting GreenEcovents`,
+            html: `
+        <h1>Thank you for contacting GreenEcovents ${data.name}</h1>
+        <p>We will get back to you as soon as possible.</p>
+        <p>Regards,</p>
+        <p>GreenEcovents Team</p>
+      `,
+        };
+        const info = yield transporter.sendMail(mailOptions);
+        if (!info) {
+            throw new ApiError_1.default(http_status_1.default.INTERNAL_SERVER_ERROR, 'Email not sent');
+        }
         return { sent: true };
     }
 });

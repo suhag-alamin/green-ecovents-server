@@ -15,6 +15,7 @@ const user_route_1 = require("../modules/user/user.route");
 const admin_route_1 = require("../modules/admin/admin.route");
 const feedback_route_1 = require("../modules/feedback/feedback.route");
 const mail_route_1 = require("../modules/mail/mail.route");
+const page_route_1 = require("../modules/page/page.route");
 const router = express_1.default.Router();
 const moduleRoutes = [
     {
@@ -48,6 +49,10 @@ const moduleRoutes = [
     {
         path: '/blogs',
         route: blog_route_1.BlogRoutes,
+    },
+    {
+        path: '/pages',
+        route: page_route_1.PageRoutes,
     },
     {
         path: '/faq',
