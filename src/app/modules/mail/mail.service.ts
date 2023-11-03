@@ -1,8 +1,8 @@
 import httpStatus from 'http-status';
+import nodemailer from 'nodemailer';
 import config from '../../../config';
 import ApiError from '../../../errors/ApiError';
 import { IMail } from './mail.interface';
-import nodemailer from 'nodemailer';
 
 const sendMail = async (data: IMail) => {
   const transporter = nodemailer.createTransport({
@@ -31,6 +31,23 @@ const sendMail = async (data: IMail) => {
     throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, 'Email not sent');
   }
   if (info.messageId) {
+    // send auto reply to user
+    const mailOptions = {
+      from: config.email.to_email,
+      to: data.email,
+      subject: `Thank you for contacting GreenEcovents`,
+      html: `
+        <h1>Thank you for contacting GreenEcovents ${data.name}</h1>
+        <p>We will get back to you as soon as possible.</p>
+        <p>Regards,</p>
+        <p>GreenEcovents Team</p>
+      `,
+    };
+    const info = await transporter.sendMail(mailOptions);
+    if (!info) {
+      throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, 'Email not sent');
+    }
+
     return { sent: true };
   }
 };
