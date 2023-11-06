@@ -42,6 +42,15 @@ const getAllUsersController = (0, catchAsync_1.default)((req, res) => __awaiter(
         data: result.data,
     });
 }));
+const getUserByIdController = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield user_service_1.UserService.getUserById(req.params.id);
+    (0, sendResponse_1.default)(res, {
+        statusCode: http_status_1.default.OK,
+        success: true,
+        message: 'User retrieved successfully',
+        data: result,
+    });
+}));
 const updateProfileController = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const user = req.user;
     const result = yield user_service_1.UserService.updateProfile(user, req.body);
@@ -73,6 +82,7 @@ const deleteUserController = (0, catchAsync_1.default)((req, res) => __awaiter(v
 exports.UserController = {
     getProfileController,
     getAllUsersController,
+    getUserByIdController,
     updateProfileController,
     updateUserController,
     deleteUserController,

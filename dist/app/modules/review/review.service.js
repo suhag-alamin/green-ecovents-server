@@ -29,7 +29,8 @@ const getReviews = () => __awaiter(void 0, void 0, void 0, function* () {
             createdAt: 'desc',
         },
         include: {
-            event: true,
+            // event: true,
+            user: true,
         },
     });
     return result;

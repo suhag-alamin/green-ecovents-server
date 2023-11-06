@@ -101,6 +101,21 @@ const getAllUsers = async (
   };
 };
 
+const getUserById = async (userId: string): Promise<Partial<User | null>> => {
+  const result = await prisma.user.findUnique({
+    where: {
+      id: userId,
+    },
+  });
+
+  if (result?.email) {
+    const newResult = excludePassword(result, ['password']);
+
+    return newResult;
+  }
+  return null;
+};
+
 const updateProfile = async (
   user: JwtPayload | null,
   data: Partial<User>,
@@ -213,6 +228,7 @@ const deleteUser = async (userId: string): Promise<User | null> => {
 export const UserService = {
   getProfile,
   getAllUsers,
+  getUserById,
   updateProfile,
   updateUser,
   deleteUser,

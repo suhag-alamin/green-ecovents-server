@@ -17,7 +17,8 @@ const getReviews = async (): Promise<Review[]> => {
       createdAt: 'desc',
     },
     include: {
-      event: true,
+      // event: true,
+      user: true,
     },
   });
   return result;

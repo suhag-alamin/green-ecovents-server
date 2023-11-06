@@ -12,10 +12,10 @@ const review_validation_1 = require("./review.validation");
 const review_controller_1 = require("./review.controller");
 const router = express_1.default.Router();
 router.post('/', (0, auth_1.default)(client_1.UserRole.ADMIN, client_1.UserRole.SUPER_ADMIN, client_1.UserRole.USER), (0, validateRequest_1.default)(review_validation_1.ReviewValidation.createReviewZodSchema), review_controller_1.ReviewController.createReviewController);
-router.get('/user', 
+router.get('/user', (0, auth_1.default)(client_1.UserRole.ADMIN, client_1.UserRole.SUPER_ADMIN, client_1.UserRole.USER), review_controller_1.ReviewController.getReviewsByUserController);
+router.get('/', 
 // auth(UserRole.ADMIN, UserRole.SUPER_ADMIN, UserRole.USER),
-review_controller_1.ReviewController.getReviewsByUserController);
-router.get('/', (0, auth_1.default)(client_1.UserRole.ADMIN, client_1.UserRole.SUPER_ADMIN, client_1.UserRole.USER), review_controller_1.ReviewController.getReviewsController);
+review_controller_1.ReviewController.getReviewsController);
 router.get('/:id', (0, auth_1.default)(client_1.UserRole.ADMIN, client_1.UserRole.SUPER_ADMIN, client_1.UserRole.USER), review_controller_1.ReviewController.getSingleReviewController);
 router.patch('/:id', (0, auth_1.default)(client_1.UserRole.ADMIN, client_1.UserRole.SUPER_ADMIN), (0, validateRequest_1.default)(review_validation_1.ReviewValidation.updateReviewZodSchema), review_controller_1.ReviewController.updateReviewController);
 router.delete('/:id', (0, auth_1.default)(client_1.UserRole.ADMIN, client_1.UserRole.SUPER_ADMIN), review_controller_1.ReviewController.deleteReviewController);

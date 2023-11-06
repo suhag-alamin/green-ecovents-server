@@ -102,6 +102,18 @@ const getAllUsers = (filters, paginationOptions) => __awaiter(void 0, void 0, vo
         data: newResult,
     };
 });
+const getUserById = (userId) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield prisma_1.default.user.findUnique({
+        where: {
+            id: userId,
+        },
+    });
+    if (result === null || result === void 0 ? void 0 : result.email) {
+        const newResult = (0, utils_1.excludePassword)(result, ['password']);
+        return newResult;
+    }
+    return null;
+});
 const updateProfile = (user, data) => __awaiter(void 0, void 0, void 0, function* () {
     const isUserExist = yield prisma_1.default.user.findUnique({
         where: {
@@ -192,6 +204,7 @@ const deleteUser = (userId) => __awaiter(void 0, void 0, void 0, function* () {
 exports.UserService = {
     getProfile,
     getAllUsers,
+    getUserById,
     updateProfile,
     updateUser,
     deleteUser,

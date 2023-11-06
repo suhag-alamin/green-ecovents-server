@@ -17,6 +17,8 @@ router.get(
   UserController.getAllUsersController,
 );
 
+router.get('/:id', UserController.getUserByIdController);
+
 router.patch(
   '/profile',
   auth(UserRole.SUPER_ADMIN, UserRole.ADMIN, UserRole.USER),

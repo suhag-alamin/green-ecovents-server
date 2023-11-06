@@ -14,6 +14,21 @@ const createBookingZodSchema = z.object({
     endDate: z.string({
       required_error: 'End Date is required',
     }),
+    adults: z.number({
+      required_error: 'Number of Adults is required',
+    }),
+    children: z.number().optional(),
+    email: z
+      .string({
+        required_error: 'Email is required',
+      })
+      .email(),
+    contactNo: z.string({
+      required_error: 'Contact No is required',
+    }),
+    totalAmount: z.number({
+      required_error: 'Total Amount is required',
+    }),
     userId: z.string({
       required_error: 'User id is required',
     }),
