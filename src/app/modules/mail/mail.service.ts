@@ -1,17 +1,11 @@
 import httpStatus from 'http-status';
-import nodemailer from 'nodemailer';
 import config from '../../../config';
 import ApiError from '../../../errors/ApiError';
 import { IMail } from './mail.interface';
+import { getTransporter } from '../../../shared/transporter';
 
 const sendMail = async (data: IMail) => {
-  const transporter = nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-      user: config.email.user,
-      pass: config.email.pass,
-    },
-  });
+  const transporter = getTransporter();
 
   const mailOptions = {
     from: data.email,

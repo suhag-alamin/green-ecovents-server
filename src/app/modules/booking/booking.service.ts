@@ -6,14 +6,38 @@ import { IPaginationOptions } from '../../../interfaces/pagination';
 import prisma from '../../../shared/prisma';
 import { IBookingFilters } from './booking.interface';
 import { JwtPayload } from 'jsonwebtoken';
+import { sendMail } from '../../../shared/utils';
 
 const createBooking = async (data: Booking): Promise<Booking> => {
   const result = await prisma.booking.create({
     data,
     include: {
       event: true,
+      user: true,
     },
   });
+
+  if (result.id) {
+    await sendMail({
+      subject: `Booking Confirmation of - ${result.event?.title}`,
+      to: result.email,
+      message: `
+      <h1>Confirmation of Your Event Booking</h1>
+      <p> <strong>Dear ${result.user?.firstName}</strong> ,</p>
+      <p>We are thrilled to inform you that your event booking has been successfully confirmed! Thank you for choosing GreenEcovents to be a part of your special day.</p>
+      <h3>Event Details:</h3>
+      <p><strong>Event Name:</strong> ${result.event?.title}</p>
+      <p><strong>Date:</strong>: From ${result.startDate} to ${result.endDate} </p>
+      <p><strong>Location:</strong>: ${result.event?.location}</p>
+      <p><strong>Your Booking ID:</strong>: ${result.id}</p>
+      <p>Please keep this email as a reference for your booking. If you have any questions or need to make any changes, don't hesitate to contact our customer support team at contact@greenecovents.com.</p>
+      <p>We look forward to hosting you and ensuring that your event is a memorable experience. Stay tuned for further updates and information as the event date approaches.</p>
+      <p>Best regards,</p>
+      <p>GreenEcovents</p>
+      `,
+    });
+  }
+
   return result;
 };
 
@@ -218,6 +242,7 @@ const cancelBooking = async (
       },
     },
   });
+
   return result;
 };
 
