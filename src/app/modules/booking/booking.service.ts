@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { Booking, BookingStatus, Prisma } from '@prisma/client';
+import { JwtPayload } from 'jsonwebtoken';
 import { paginationHelpers } from '../../../helpers/paginationHelper';
 import { IGenericResponse } from '../../../interfaces/common';
 import { IPaginationOptions } from '../../../interfaces/pagination';
 import prisma from '../../../shared/prisma';
-import { IBookingFilters } from './booking.interface';
-import { JwtPayload } from 'jsonwebtoken';
 import { sendMail } from '../../../shared/utils';
+import { IBookingFilters } from './booking.interface';
 
 const createBooking = async (data: Booking): Promise<Booking> => {
   const result = await prisma.booking.create({
@@ -218,6 +218,51 @@ const updateBooking = async (
       },
     },
   });
+
+  if (data.status && result.id) {
+    if (
+      data.status === BookingStatus.confirmed ||
+      data.status === BookingStatus.pending
+    ) {
+      await sendMail({
+        subject: `Booking Status Update of - ${result.event?.title}`,
+        to: result.email,
+        message: `
+      <h1>Booking Status Update of - ${result.event?.title}</h1>
+      <p> <strong>Dear ${result.user?.firstName}</strong> ,</p>
+      <p>We are writing to inform you that the status of your event booking has been updated to <strong>${result.status}</strong>! Thank you for choosing GreenEcovents to be a part of your special day.</p>
+      <h3>Event Details:</h3>
+      <p><strong>Event Name:</strong> ${result.event?.title}</p>
+      <p><strong>Booking Status:</strong> ${result?.status}</p>
+      <p><strong>Date:</strong>: From ${result.startDate} to ${result.endDate} </p>
+      <p><strong>Location:</strong>: ${result.event?.location}</p>
+      <p><strong>Your Booking ID:</strong>: ${result.id}</p>
+      <p>Please keep this email as a reference for your booking. If you have any questions or need to make any changes, don't hesitate to contact our customer support team at contact@greenecovents.com </p>
+      <p>Best regards,</p>
+      <p>GreenEcovents</p>
+      `,
+      });
+    } else if (data.status === BookingStatus.canceled) {
+      await sendMail({
+        subject: `Booking Cancellation of - ${result.event?.title}`,
+        to: result.email,
+        message: `
+      <h1>Cancellation of Your Event Booking</h1>
+      <p> <strong>Dear ${result.user?.firstName}</strong> ,</p>
+      <p>We are sorry to inform you that your event booking has been cancelled! Thank you for choosing GreenEcovents to be a part of your special day.</p>
+      <h3>Event Details:</h3>
+      <p><strong>Event Name:</strong> ${result.event?.title}</p>
+      <p><strong>Date:</strong>: From ${result.startDate} to ${result.endDate} </p>
+      <p><strong>Location:</strong>: ${result.event?.location}</p>
+      <p><strong>Your Booking ID:</strong>: ${result.id}</p>
+      <p>Please keep this email as a reference for your booking. If you have any questions or need to make any changes, don't hesitate to contact our customer support team at contact@greenecovents.com</p>
+      <p>Best regards,</p>
+      <p>GreenEcovents</p>
+      `,
+      });
+    }
+  }
+
   return result;
 };
 const cancelBooking = async (
@@ -242,6 +287,26 @@ const cancelBooking = async (
       },
     },
   });
+
+  if (result.id) {
+    await sendMail({
+      subject: `Booking Cancellation of - ${result.event?.title}`,
+      to: result.email,
+      message: `
+      <h1>Cancellation of Your Event Booking</h1>
+      <p> <strong>Dear ${result.user?.firstName}</strong> ,</p>
+      <p>We are sorry to inform you that your event booking has been cancelled! Thank you for choosing GreenEcovents to be a part of your special day.</p>
+      <h3>Event Details:</h3>
+      <p><strong>Event Name:</strong> ${result.event?.title}</p>
+      <p><strong>Date:</strong>: From ${result.startDate} to ${result.endDate} </p>
+      <p><strong>Location:</strong>: ${result.event?.location}</p>
+      <p><strong>Your Booking ID:</strong>: ${result.id}</p>
+      <p>Please keep this email as a reference for your booking. If you have any questions or need to make any changes, don't hesitate to contact our customer support team at contact@greenecovents.com</p>
+      <p>Best regards,</p>
+      <p>GreenEcovents</p>
+      `,
+    });
+  }
 
   return result;
 };

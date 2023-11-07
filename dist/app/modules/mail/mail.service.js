@@ -14,17 +14,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.MailService = void 0;
 const http_status_1 = __importDefault(require("http-status"));
-const nodemailer_1 = __importDefault(require("nodemailer"));
 const config_1 = __importDefault(require("../../../config"));
 const ApiError_1 = __importDefault(require("../../../errors/ApiError"));
+const transporter_1 = require("../../../shared/transporter");
 const sendMail = (data) => __awaiter(void 0, void 0, void 0, function* () {
-    const transporter = nodemailer_1.default.createTransport({
-        service: 'gmail',
-        auth: {
-            user: config_1.default.email.user,
-            pass: config_1.default.email.pass,
-        },
-    });
+    const transporter = (0, transporter_1.getTransporter)();
     const mailOptions = {
         from: data.email,
         to: config_1.default.email.to_email,

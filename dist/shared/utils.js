@@ -12,8 +12,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.asyncForEach = exports.excludePassword = exports.isPasswordMatch = void 0;
+exports.sendMail = exports.asyncForEach = exports.excludePassword = exports.isPasswordMatch = void 0;
 const bcrypt_1 = __importDefault(require("bcrypt"));
+const transporter_1 = require("./transporter");
+const config_1 = __importDefault(require("../config"));
 const isPasswordMatch = (givenPassword, savedPassword) => __awaiter(void 0, void 0, void 0, function* () {
     return yield bcrypt_1.default.compare(givenPassword, savedPassword);
 });
@@ -31,3 +33,20 @@ const asyncForEach = (array, callback) => __awaiter(void 0, void 0, void 0, func
     }
 });
 exports.asyncForEach = asyncForEach;
+const sendMail = (data) => __awaiter(void 0, void 0, void 0, function* () {
+    const transporter = (0, transporter_1.getTransporter)();
+    const mailOptions = {
+        from: config_1.default.email.user,
+        to: data.to,
+        subject: data.subject,
+        html: data.message,
+    };
+    const info = yield transporter.sendMail(mailOptions);
+    if (!info) {
+        throw new Error('Email not sent');
+    }
+    if (info.messageId) {
+        return { sent: true };
+    }
+});
+exports.sendMail = sendMail;

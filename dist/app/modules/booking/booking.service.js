@@ -28,13 +28,36 @@ exports.BookingService = void 0;
 const client_1 = require("@prisma/client");
 const paginationHelper_1 = require("../../../helpers/paginationHelper");
 const prisma_1 = __importDefault(require("../../../shared/prisma"));
+const utils_1 = require("../../../shared/utils");
 const createBooking = (data) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a, _b, _c, _d;
     const result = yield prisma_1.default.booking.create({
         data,
         include: {
             event: true,
+            user: true,
         },
     });
+    if (result.id) {
+        yield (0, utils_1.sendMail)({
+            subject: `Booking Confirmation of - ${(_a = result.event) === null || _a === void 0 ? void 0 : _a.title}`,
+            to: result.email,
+            message: `
+      <h1>Confirmation of Your Event Booking</h1>
+      <p> <strong>Dear ${(_b = result.user) === null || _b === void 0 ? void 0 : _b.firstName}</strong> ,</p>
+      <p>We are thrilled to inform you that your event booking has been successfully confirmed! Thank you for choosing GreenEcovents to be a part of your special day.</p>
+      <h3>Event Details:</h3>
+      <p><strong>Event Name:</strong> ${(_c = result.event) === null || _c === void 0 ? void 0 : _c.title}</p>
+      <p><strong>Date:</strong>: From ${result.startDate} to ${result.endDate} </p>
+      <p><strong>Location:</strong>: ${(_d = result.event) === null || _d === void 0 ? void 0 : _d.location}</p>
+      <p><strong>Your Booking ID:</strong>: ${result.id}</p>
+      <p>Please keep this email as a reference for your booking. If you have any questions or need to make any changes, don't hesitate to contact our customer support team at contact@greenecovents.com.</p>
+      <p>We look forward to hosting you and ensuring that your event is a memorable experience. Stay tuned for further updates and information as the event date approaches.</p>
+      <p>Best regards,</p>
+      <p>GreenEcovents</p>
+      `,
+        });
+    }
     return result;
 });
 const getBookings = (filters, paginationOptions) => __awaiter(void 0, void 0, void 0, function* () {
@@ -169,6 +192,7 @@ const getSingleBooking = (id) => __awaiter(void 0, void 0, void 0, function* () 
     return result;
 });
 const updateBooking = (id, data) => __awaiter(void 0, void 0, void 0, function* () {
+    var _e, _f, _g, _h, _j, _k, _l, _m, _o;
     const result = yield prisma_1.default.booking.update({
         where: {
             id,
@@ -184,9 +208,52 @@ const updateBooking = (id, data) => __awaiter(void 0, void 0, void 0, function* 
             },
         },
     });
+    if (data.status && result.id) {
+        if (data.status === client_1.BookingStatus.confirmed ||
+            data.status === client_1.BookingStatus.pending) {
+            yield (0, utils_1.sendMail)({
+                subject: `Booking Status Update of - ${(_e = result.event) === null || _e === void 0 ? void 0 : _e.title}`,
+                to: result.email,
+                message: `
+      <h1>Booking Status Update of - ${(_f = result.event) === null || _f === void 0 ? void 0 : _f.title}</h1>
+      <p> <strong>Dear ${(_g = result.user) === null || _g === void 0 ? void 0 : _g.firstName}</strong> ,</p>
+      <p>We are writing to inform you that the status of your event booking has been updated to <strong>${result.status}</strong>! Thank you for choosing GreenEcovents to be a part of your special day.</p>
+      <h3>Event Details:</h3>
+      <p><strong>Event Name:</strong> ${(_h = result.event) === null || _h === void 0 ? void 0 : _h.title}</p>
+      <p><strong>Booking Status:</strong> ${result === null || result === void 0 ? void 0 : result.status}</p>
+      <p><strong>Date:</strong>: From ${result.startDate} to ${result.endDate} </p>
+      <p><strong>Location:</strong>: ${(_j = result.event) === null || _j === void 0 ? void 0 : _j.location}</p>
+      <p><strong>Your Booking ID:</strong>: ${result.id}</p>
+      <p>Please keep this email as a reference for your booking. If you have any questions or need to make any changes, don't hesitate to contact our customer support team at contact@greenecovents.com </p>
+      <p>Best regards,</p>
+      <p>GreenEcovents</p>
+      `,
+            });
+        }
+        else if (data.status === client_1.BookingStatus.canceled) {
+            yield (0, utils_1.sendMail)({
+                subject: `Booking Cancellation of - ${(_k = result.event) === null || _k === void 0 ? void 0 : _k.title}`,
+                to: result.email,
+                message: `
+      <h1>Cancellation of Your Event Booking</h1>
+      <p> <strong>Dear ${(_l = result.user) === null || _l === void 0 ? void 0 : _l.firstName}</strong> ,</p>
+      <p>We are sorry to inform you that your event booking has been cancelled! Thank you for choosing GreenEcovents to be a part of your special day.</p>
+      <h3>Event Details:</h3>
+      <p><strong>Event Name:</strong> ${(_m = result.event) === null || _m === void 0 ? void 0 : _m.title}</p>
+      <p><strong>Date:</strong>: From ${result.startDate} to ${result.endDate} </p>
+      <p><strong>Location:</strong>: ${(_o = result.event) === null || _o === void 0 ? void 0 : _o.location}</p>
+      <p><strong>Your Booking ID:</strong>: ${result.id}</p>
+      <p>Please keep this email as a reference for your booking. If you have any questions or need to make any changes, don't hesitate to contact our customer support team at contact@greenecovents.com</p>
+      <p>Best regards,</p>
+      <p>GreenEcovents</p>
+      `,
+            });
+        }
+    }
     return result;
 });
 const cancelBooking = (id, user) => __awaiter(void 0, void 0, void 0, function* () {
+    var _p, _q, _r, _s;
     const result = yield prisma_1.default.booking.update({
         where: {
             id,
@@ -205,6 +272,25 @@ const cancelBooking = (id, user) => __awaiter(void 0, void 0, void 0, function* 
             },
         },
     });
+    if (result.id) {
+        yield (0, utils_1.sendMail)({
+            subject: `Booking Cancellation of - ${(_p = result.event) === null || _p === void 0 ? void 0 : _p.title}`,
+            to: result.email,
+            message: `
+      <h1>Cancellation of Your Event Booking</h1>
+      <p> <strong>Dear ${(_q = result.user) === null || _q === void 0 ? void 0 : _q.firstName}</strong> ,</p>
+      <p>We are sorry to inform you that your event booking has been cancelled! Thank you for choosing GreenEcovents to be a part of your special day.</p>
+      <h3>Event Details:</h3>
+      <p><strong>Event Name:</strong> ${(_r = result.event) === null || _r === void 0 ? void 0 : _r.title}</p>
+      <p><strong>Date:</strong>: From ${result.startDate} to ${result.endDate} </p>
+      <p><strong>Location:</strong>: ${(_s = result.event) === null || _s === void 0 ? void 0 : _s.location}</p>
+      <p><strong>Your Booking ID:</strong>: ${result.id}</p>
+      <p>Please keep this email as a reference for your booking. If you have any questions or need to make any changes, don't hesitate to contact our customer support team at contact@greenecovents.com</p>
+      <p>Best regards,</p>
+      <p>GreenEcovents</p>
+      `,
+        });
+    }
     return result;
 });
 const deleteBooking = (id) => __awaiter(void 0, void 0, void 0, function* () {
