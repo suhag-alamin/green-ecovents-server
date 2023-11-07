@@ -16,6 +16,7 @@ const admin_route_1 = require("../modules/admin/admin.route");
 const feedback_route_1 = require("../modules/feedback/feedback.route");
 const mail_route_1 = require("../modules/mail/mail.route");
 const page_route_1 = require("../modules/page/page.route");
+const subscriber_route_1 = require("../modules/subscriber/subscriber.route");
 const router = express_1.default.Router();
 const moduleRoutes = [
     {
@@ -65,6 +66,10 @@ const moduleRoutes = [
     {
         path: '/mail',
         route: mail_route_1.MailRoutes,
+    },
+    {
+        path: '/subscribers',
+        route: subscriber_route_1.SubscriberRoutes,
     },
 ];
 moduleRoutes.forEach(route => router.use(route.path, route.route));
