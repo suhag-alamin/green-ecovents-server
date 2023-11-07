@@ -76,11 +76,11 @@ model Booking {
   startDate   DateTime
   endDate     DateTime
   adults      Int           @default(1)
-  children    Int?          @default(0)
+  childrens   Int           @default(0)
   email       String
   contactNo   String
-  daysBooked  Int           @default(1)
-  totalAmount Float         @default(0)
+  daysBooked  Int
+  totalAmount Float
   userId      String
   user        User          @relation(fields: [userId], references: [id])
   eventId     String

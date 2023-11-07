@@ -139,7 +139,6 @@ const getBookingsByUser = async (
         include: {
           categories: true,
           reviews: true,
-          bookings: true,
         },
       },
     },

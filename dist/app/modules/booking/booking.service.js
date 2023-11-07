@@ -135,7 +135,6 @@ const getBookingsByUser = (filters, paginationOptions, user) => __awaiter(void 0
                 include: {
                     categories: true,
                     reviews: true,
-                    bookings: true,
                 },
             },
         },

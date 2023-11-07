@@ -19,7 +19,7 @@ const createBookingZodSchema = zod_1.z.object({
         adults: zod_1.z.number({
             required_error: 'Number of Adults is required',
         }),
-        children: zod_1.z.number().optional(),
+        childrens: zod_1.z.number().optional(),
         email: zod_1.z
             .string({
             required_error: 'Email is required',
@@ -44,11 +44,15 @@ const updateBookingZodSchema = zod_1.z.object({
         status: zod_1.z
             .enum([...Object.values(client_1.BookingStatus)], {})
             .optional(),
-        description: zod_1.z.string({}).optional(),
         startDate: zod_1.z.string({}).optional(),
         endDate: zod_1.z.string({}).optional(),
         userId: zod_1.z.string({}).optional(),
         eventId: zod_1.z.string({}).optional(),
+        adults: zod_1.z.number({}).optional(),
+        childrens: zod_1.z.number({}).optional(),
+        email: zod_1.z.string({}).optional(),
+        contactNo: zod_1.z.string({}).optional(),
+        totalAmount: zod_1.z.number({}).optional(),
     }),
 });
 exports.BookingValidation = {

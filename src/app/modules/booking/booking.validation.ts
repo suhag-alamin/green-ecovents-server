@@ -17,7 +17,7 @@ const createBookingZodSchema = z.object({
     adults: z.number({
       required_error: 'Number of Adults is required',
     }),
-    children: z.number().optional(),
+    childrens: z.number().optional(),
     email: z
       .string({
         required_error: 'Email is required',
@@ -42,11 +42,15 @@ const updateBookingZodSchema = z.object({
     status: z
       .enum([...Object.values(BookingStatus)] as [string, ...string[]], {})
       .optional(),
-    description: z.string({}).optional(),
     startDate: z.string({}).optional(),
     endDate: z.string({}).optional(),
     userId: z.string({}).optional(),
     eventId: z.string({}).optional(),
+    adults: z.number({}).optional(),
+    childrens: z.number({}).optional(),
+    email: z.string({}).optional(),
+    contactNo: z.string({}).optional(),
+    totalAmount: z.number({}).optional(),
   }),
 });
 
