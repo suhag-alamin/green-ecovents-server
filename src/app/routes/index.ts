@@ -11,6 +11,7 @@ import { AdminRoutes } from '../modules/admin/admin.route';
 import { FeedbackRoutes } from '../modules/feedback/feedback.route';
 import { MailRoutes } from '../modules/mail/mail.route';
 import { PageRoutes } from '../modules/page/page.route';
+import { SubscriberRoutes } from '../modules/subscriber/subscriber.route';
 
 const router = express.Router();
 
@@ -62,6 +63,10 @@ const moduleRoutes = [
   {
     path: '/mail',
     route: MailRoutes,
+  },
+  {
+    path: '/subscribers',
+    route: SubscriberRoutes,
   },
 ];
 
