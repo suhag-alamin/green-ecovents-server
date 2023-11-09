@@ -23,4 +23,8 @@ exports.default = {
         pass: process.env.EMAIL_PASS,
         to_email: process.env.TO_EMAIL,
     },
+    stripe: {
+        secret_key: process.env.STRIPE_SECRET_KEY,
+        public_key: process.env.STRIPE_PUBLISHABLE_KEY,
+    },
 };

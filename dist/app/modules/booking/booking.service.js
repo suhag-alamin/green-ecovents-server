@@ -26,11 +26,29 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.BookingService = void 0;
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 const client_1 = require("@prisma/client");
+const http_status_1 = __importDefault(require("http-status"));
+const stripe_1 = __importDefault(require("stripe"));
+const config_1 = __importDefault(require("../../../config"));
+const ApiError_1 = __importDefault(require("../../../errors/ApiError"));
 const paginationHelper_1 = require("../../../helpers/paginationHelper");
 const prisma_1 = __importDefault(require("../../../shared/prisma"));
 const utils_1 = require("../../../shared/utils");
+const createPaymentIntents = (data) => __awaiter(void 0, void 0, void 0, function* () {
+    const stripe = new stripe_1.default(config_1.default.stripe.secret_key);
+    const paymentIntent = yield stripe.paymentIntents.create({
+        amount: data.amount,
+        currency: data.currency,
+        payment_method_types: ['card'],
+        receipt_email: data.email,
+    });
+    return {
+        paymentId: paymentIntent.id,
+        currency: paymentIntent.currency,
+        amount: paymentIntent.amount / 100,
+        clientSecret: paymentIntent.client_secret,
+    };
+});
 const createBooking = (data) => __awaiter(void 0, void 0, void 0, function* () {
-    var _a, _b, _c, _d;
     const result = yield prisma_1.default.booking.create({
         data,
         include: {
@@ -38,27 +56,70 @@ const createBooking = (data) => __awaiter(void 0, void 0, void 0, function* () {
             user: true,
         },
     });
-    if (result.id) {
-        yield (0, utils_1.sendMail)({
-            subject: `Booking Confirmation of - ${(_a = result.event) === null || _a === void 0 ? void 0 : _a.title}`,
-            to: result.email,
-            message: `
-      <h1>Confirmation of Your Event Booking</h1>
-      <p> <strong>Dear ${(_b = result.user) === null || _b === void 0 ? void 0 : _b.firstName}</strong> ,</p>
-      <p>We are thrilled to inform you that your event booking has been successfully confirmed! Thank you for choosing GreenEcovents to be a part of your special day.</p>
-      <h3>Event Details:</h3>
-      <p><strong>Event Name:</strong> ${(_c = result.event) === null || _c === void 0 ? void 0 : _c.title}</p>
-      <p><strong>Date:</strong>: From ${result.startDate} to ${result.endDate} </p>
-      <p><strong>Location:</strong>: ${(_d = result.event) === null || _d === void 0 ? void 0 : _d.location}</p>
-      <p><strong>Your Booking ID:</strong>: ${result.id}</p>
-      <p>Please keep this email as a reference for your booking. If you have any questions or need to make any changes, don't hesitate to contact our customer support team at contact@greenecovents.com.</p>
-      <p>We look forward to hosting you and ensuring that your event is a memorable experience. Stay tuned for further updates and information as the event date approaches.</p>
-      <p>Best regards,</p>
-      <p>GreenEcovents</p>
-      `,
-        });
-    }
+    // if (result.id) {
+    //   await sendMail({
+    //     subject: `Booking Confirmation of - ${result.event?.title}`,
+    //     to: result.email,
+    //     message: `
+    //     <h1>Confirmation of Your Event Booking</h1>
+    //     <p> <strong>Dear ${result.user?.firstName}</strong> ,</p>
+    //     <p>We are thrilled to inform you that your event booking has been successfully confirmed! Thank you for choosing GreenEcovents to be a part of your special day.</p>
+    //     <h3>Event Details:</h3>
+    //     <p><strong>Event Name:</strong> ${result.event?.title}</p>
+    //     <p><strong>Date:</strong>: From ${result.startDate} to ${result.endDate} </p>
+    //     <p><strong>Location:</strong>: ${result.event?.location}</p>
+    //     <p><strong>Your Booking ID:</strong>: ${result.id}</p>
+    //     <p>Please keep this email as a reference for your booking. If you have any questions or need to make any changes, don't hesitate to contact our customer support team at contact@greenecovents.com.</p>
+    //     <p>We look forward to hosting you and ensuring that your event is a memorable experience. Stay tuned for further updates and information as the event date approaches.</p>
+    //     <p>Best regards,</p>
+    //     <p>GreenEcovents</p>
+    //     `,
+    //   });
+    // }
     return result;
+});
+const confirmBooking = (data) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield prisma_1.default.$transaction((transactionClient) => __awaiter(void 0, void 0, void 0, function* () {
+        var _a, _b, _c, _d;
+        yield transactionClient.payment.create({ data });
+        const booking = yield transactionClient.booking.update({
+            where: {
+                id: data.bookingId,
+            },
+            data: {
+                status: client_1.BookingStatus.confirmed,
+            },
+            include: {
+                event: true,
+                user: true,
+            },
+        });
+        if (booking.id) {
+            yield (0, utils_1.sendMail)({
+                subject: `Booking Confirmation of - ${(_a = booking.event) === null || _a === void 0 ? void 0 : _a.title}`,
+                to: booking.email,
+                message: `
+        <h1>Confirmation of Your Event Booking</h1>
+        <p> <strong>Dear ${(_b = booking.user) === null || _b === void 0 ? void 0 : _b.firstName}</strong> ,</p>
+        <p>We are thrilled to inform you that your event booking has been successfully confirmed! Thank you for choosing GreenEcovents to be a part of your special day.</p>
+        <h3>Event Details:</h3>
+        <p><strong>Event Name:</strong> ${(_c = booking.event) === null || _c === void 0 ? void 0 : _c.title}</p>
+        <p><strong>Date:</strong>: From ${booking.startDate} to ${booking.endDate} </p>
+        <p><strong>Location:</strong>: ${(_d = booking.event) === null || _d === void 0 ? void 0 : _d.location}</p>
+        <p><strong>Your Booking ID:</strong>: ${booking.id}</p>
+        <p>Please keep this email as a reference for your booking. If you have any questions or need to make any changes, don't hesitate to contact our customer support team at contact@greenecovents.com.</p>
+        <p>We look forward to hosting you and ensuring that your event is a memorable experience. Stay tuned for further updates and information as the event date approaches.</p>
+        <p>Best regards,</p>
+        <p>GreenEcovents</p>
+        `,
+            });
+        }
+        return booking;
+    }));
+    if (result) {
+        return result;
+    }
+    throw new ApiError_1.default(http_status_1.default.BAD_REQUEST, 'Unable to confirm booking.');
 });
 const getBookings = (filters, paginationOptions) => __awaiter(void 0, void 0, void 0, function* () {
     const filtersData = __rest(filters, []);
@@ -160,6 +221,7 @@ const getBookingsByUser = (filters, paginationOptions, user) => __awaiter(void 0
                     reviews: true,
                 },
             },
+            payments: true,
         },
     });
     const total = yield prisma_1.default.booking.count({
@@ -301,8 +363,37 @@ const deleteBooking = (id) => __awaiter(void 0, void 0, void 0, function* () {
     });
     return result;
 });
+const getPaymentDetails = (paymentIntentId) => __awaiter(void 0, void 0, void 0, function* () {
+    var _t, _u, _v;
+    const stripe = new stripe_1.default(config_1.default.stripe.secret_key);
+    const paymentIntent = yield stripe.paymentIntents.retrieve(paymentIntentId);
+    const { id, amount, currency, receipt_email } = paymentIntent;
+    if (!id) {
+        throw new ApiError_1.default(http_status_1.default.BAD_REQUEST, 'Invalid payment id.');
+    }
+    const result = yield prisma_1.default.payment.findFirst({
+        where: {
+            paymentId: paymentIntentId,
+        },
+        include: {
+            user: true,
+        },
+    });
+    const paymentDetails = {
+        paymentId: id,
+        amount: (result === null || result === void 0 ? void 0 : result.amount) || amount / 100,
+        currency,
+        email: ((_t = result === null || result === void 0 ? void 0 : result.user) === null || _t === void 0 ? void 0 : _t.email) || receipt_email,
+        name: ((_u = result === null || result === void 0 ? void 0 : result.user) === null || _u === void 0 ? void 0 : _u.firstName) + ' ' + ((_v = result === null || result === void 0 ? void 0 : result.user) === null || _v === void 0 ? void 0 : _v.lastName),
+        bookingId: result === null || result === void 0 ? void 0 : result.bookingId,
+    };
+    return paymentDetails;
+});
 exports.BookingService = {
+    createPaymentIntents,
     createBooking,
+    confirmBooking,
+    getPaymentDetails,
     getBookings,
     getBookingsByUser,
     getSingleBooking,

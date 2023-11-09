@@ -20,12 +20,30 @@ const pick_1 = __importDefault(require("../../../shared/pick"));
 const sendResponse_1 = __importDefault(require("../../../shared/sendResponse"));
 const booking_constant_1 = require("./booking.constant");
 const booking_service_1 = require("./booking.service");
+const createPaymentIntentsController = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield booking_service_1.BookingService.createPaymentIntents(req.body);
+    (0, sendResponse_1.default)(res, {
+        statusCode: http_status_1.default.OK,
+        success: true,
+        message: 'Client secret for payment intent created successfully!',
+        data: result,
+    });
+}));
 const createBookingController = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const result = yield booking_service_1.BookingService.createBooking(req.body);
     (0, sendResponse_1.default)(res, {
         statusCode: http_status_1.default.OK,
         success: true,
         message: 'Booking confirmed successfully! Please bring the money on the venue. Thanks!',
+        data: result,
+    });
+}));
+const confirmBookingController = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield booking_service_1.BookingService.confirmBooking(req.body);
+    (0, sendResponse_1.default)(res, {
+        statusCode: http_status_1.default.OK,
+        success: true,
+        message: 'Booking confirmed successfully!',
         data: result,
     });
 }));
@@ -91,12 +109,24 @@ const deleteBookingController = (0, catchAsync_1.default)((req, res) => __awaite
         data: result,
     });
 }));
+const getPaymentDetailsController = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield booking_service_1.BookingService.getPaymentDetails(req.params.id);
+    (0, sendResponse_1.default)(res, {
+        statusCode: http_status_1.default.OK,
+        success: true,
+        message: 'Booking details retrieved successfully!',
+        data: result,
+    });
+}));
 exports.BookingController = {
+    createPaymentIntentsController,
     createBookingController,
+    confirmBookingController,
     getBookingsController,
     getBookingsByUserController,
     getSingleBookingController,
     updateBookingController,
     cancelBookingController,
     deleteBookingController,
+    getPaymentDetailsController,
 };

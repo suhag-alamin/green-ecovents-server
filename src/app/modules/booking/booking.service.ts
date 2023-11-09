@@ -234,6 +234,7 @@ const getBookingsByUser = async (
           reviews: true,
         },
       },
+      payments: true,
     },
   });
   const total = await prisma.booking.count({
