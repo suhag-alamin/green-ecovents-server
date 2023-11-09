@@ -1,16 +1,16 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { Booking, BookingStatus, Prisma } from '@prisma/client';
+import httpStatus from 'http-status';
 import { JwtPayload } from 'jsonwebtoken';
+import Stripe from 'stripe';
+import config from '../../../config';
+import ApiError from '../../../errors/ApiError';
 import { paginationHelpers } from '../../../helpers/paginationHelper';
 import { IGenericResponse } from '../../../interfaces/common';
 import { IPaginationOptions } from '../../../interfaces/pagination';
 import prisma from '../../../shared/prisma';
 import { sendMail } from '../../../shared/utils';
-import { IBookingFilters } from './booking.interface';
-import config from '../../../config';
-import Stripe from 'stripe';
-import ApiError from '../../../errors/ApiError';
-import httpStatus from 'http-status';
+import { IBookingFilters, IConfirmBooking } from './booking.interface';
 
 const createPaymentIntents = async (data: any) => {
   const stripe = new Stripe(config.stripe.secret_key as string);
@@ -62,39 +62,7 @@ const createBooking = async (data: Booking): Promise<Booking> => {
 
   return result;
 };
-const confirmBooking = async (data: any): Promise<Booking> => {
-  console.log('hiitinng', data);
-  // const result = await prisma.booking.create({
-  //   data,
-  //   include: {
-  //     event: true,
-  //     user: true,
-  //   },
-  // });
-
-  // if (result.id) {
-  //   await sendMail({
-  //     subject: `Booking Confirmation of - ${result.event?.title}`,
-  //     to: result.email,
-  //     message: `
-  //     <h1>Confirmation of Your Event Booking</h1>
-  //     <p> <strong>Dear ${result.user?.firstName}</strong> ,</p>
-  //     <p>We are thrilled to inform you that your event booking has been successfully confirmed! Thank you for choosing GreenEcovents to be a part of your special day.</p>
-  //     <h3>Event Details:</h3>
-  //     <p><strong>Event Name:</strong> ${result.event?.title}</p>
-  //     <p><strong>Date:</strong>: From ${result.startDate} to ${result.endDate} </p>
-  //     <p><strong>Location:</strong>: ${result.event?.location}</p>
-  //     <p><strong>Your Booking ID:</strong>: ${result.id}</p>
-  //     <p>Please keep this email as a reference for your booking. If you have any questions or need to make any changes, don't hesitate to contact our customer support team at contact@greenecovents.com.</p>
-  //     <p>We look forward to hosting you and ensuring that your event is a memorable experience. Stay tuned for further updates and information as the event date approaches.</p>
-  //     <p>Best regards,</p>
-  //     <p>GreenEcovents</p>
-  //     `,
-  //   });
-  // }
-
-  // return result;
-
+const confirmBooking = async (data: IConfirmBooking): Promise<Booking> => {
   const result = await prisma.$transaction(async transactionClient => {
     await transactionClient.payment.create({ data });
 
@@ -140,12 +108,6 @@ const confirmBooking = async (data: any): Promise<Booking> => {
   }
 
   throw new ApiError(httpStatus.BAD_REQUEST, 'Unable to confirm booking.');
-};
-
-const getReceipt = async (paymentIntentId: string) => {
-  const stripe = new Stripe(config.stripe.secret_key as string);
-  const paymentIntent = await stripe.paymentIntents.retrieve(paymentIntentId);
-  return paymentIntent;
 };
 
 const getBookings = async (
@@ -427,11 +389,40 @@ const deleteBooking = async (id: string): Promise<Booking | null> => {
   return result;
 };
 
+const getPaymentDetails = async (paymentIntentId: string) => {
+  const stripe = new Stripe(config.stripe.secret_key as string);
+  const paymentIntent = await stripe.paymentIntents.retrieve(paymentIntentId);
+
+  const { id, amount, currency, receipt_email } = paymentIntent;
+  if (!id) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Invalid payment id.');
+  }
+
+  const result = await prisma.payment.findFirst({
+    where: {
+      paymentId: paymentIntentId,
+    },
+    include: {
+      user: true,
+    },
+  });
+
+  const paymentDetails = {
+    paymentId: id,
+    amount: result?.amount || amount / 100,
+    currency,
+    email: result?.user?.email || receipt_email,
+    name: result?.user?.firstName + ' ' + result?.user?.lastName,
+    bookingId: result?.bookingId,
+  };
+  return paymentDetails;
+};
+
 export const BookingService = {
   createPaymentIntents,
   createBooking,
   confirmBooking,
-  getReceipt,
+  getPaymentDetails,
   getBookings,
   getBookingsByUser,
   getSingleBooking,

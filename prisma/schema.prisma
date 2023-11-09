@@ -97,11 +97,8 @@ model Booking {
 // payment model
 model Payment {
   id        String  @id @default(uuid())
-  // status      String
   amount    Float
   currency  String
-  // description String
-  // receiptUrl  String
   paymentId String
   userId    String
   user      User    @relation(fields: [userId], references: [id])

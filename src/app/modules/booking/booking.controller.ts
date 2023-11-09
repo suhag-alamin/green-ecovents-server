@@ -135,6 +135,18 @@ const deleteBookingController = catchAsync(
     });
   },
 );
+const getPaymentDetailsController = catchAsync(
+  async (req: Request, res: Response) => {
+    const result = await BookingService.getPaymentDetails(req.params.id);
+
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: 'Booking details retrieved successfully!',
+      data: result,
+    });
+  },
+);
 
 export const BookingController = {
   createPaymentIntentsController,
@@ -146,4 +158,5 @@ export const BookingController = {
   updateBookingController,
   cancelBookingController,
   deleteBookingController,
+  getPaymentDetailsController,
 };
