@@ -391,13 +391,13 @@ const deleteBooking = async (id: string): Promise<Booking | null> => {
 };
 
 const getPaymentDetails = async (paymentIntentId: string) => {
+  if (!paymentIntentId) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Invalid payment id.');
+  }
   const stripe = new Stripe(config.stripe.secret_key as string);
   const paymentIntent = await stripe.paymentIntents.retrieve(paymentIntentId);
 
   const { id, amount, currency, receipt_email } = paymentIntent;
-  if (!id) {
-    throw new ApiError(httpStatus.BAD_REQUEST, 'Invalid payment id.');
-  }
 
   const result = await prisma.payment.findFirst({
     where: {

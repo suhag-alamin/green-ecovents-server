@@ -365,12 +365,12 @@ const deleteBooking = (id) => __awaiter(void 0, void 0, void 0, function* () {
 });
 const getPaymentDetails = (paymentIntentId) => __awaiter(void 0, void 0, void 0, function* () {
     var _t, _u, _v;
+    if (!paymentIntentId) {
+        throw new ApiError_1.default(http_status_1.default.BAD_REQUEST, 'Invalid payment id.');
+    }
     const stripe = new stripe_1.default(config_1.default.stripe.secret_key);
     const paymentIntent = yield stripe.paymentIntents.retrieve(paymentIntentId);
     const { id, amount, currency, receipt_email } = paymentIntent;
-    if (!id) {
-        throw new ApiError_1.default(http_status_1.default.BAD_REQUEST, 'Invalid payment id.');
-    }
     const result = yield prisma_1.default.payment.findFirst({
         where: {
             paymentId: paymentIntentId,
