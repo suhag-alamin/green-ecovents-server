@@ -29,6 +29,9 @@ const createBookingZodSchema = z.object({
     totalAmount: z.number({
       required_error: 'Total Amount is required',
     }),
+    daysBooked: z.number({
+      required_error: 'Days Booked is required',
+    }),
     userId: z.string({
       required_error: 'User id is required',
     }),
@@ -51,10 +54,32 @@ const updateBookingZodSchema = z.object({
     email: z.string({}).optional(),
     contactNo: z.string({}).optional(),
     totalAmount: z.number({}).optional(),
+    daysBooked: z.number({}).optional(),
+  }),
+});
+
+const confirmBookingZodSchema = z.object({
+  body: z.object({
+    amount: z.number({
+      required_error: 'Amount is required',
+    }),
+    currency: z.string({
+      required_error: 'Currency is required',
+    }),
+    paymentId: z.string({
+      required_error: 'Payment Id is required',
+    }),
+    userId: z.string({
+      required_error: 'User Id is required',
+    }),
+    bookingId: z.string({
+      required_error: 'Booking Id is required',
+    }),
   }),
 });
 
 export const BookingValidation = {
   createBookingZodSchema,
   updateBookingZodSchema,
+  confirmBookingZodSchema,
 };

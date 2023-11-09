@@ -30,6 +30,7 @@ model User {
   updatedAt DateTime   @updatedAt
   feedbacks Feedback[]
   pages     Pages[]
+  payments  Payment[]
 
   @@map("users")
 }
@@ -86,10 +87,31 @@ model Booking {
   eventId     String
   event       Event         @relation(fields: [eventId], references: [id])
 
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  payments  Payment[]
+
+  @@map("bookings")
+}
+
+// payment model
+model Payment {
+  id        String  @id @default(uuid())
+  // status      String
+  amount    Float
+  currency  String
+  // description String
+  // receiptUrl  String
+  paymentId String
+  userId    String
+  user      User    @relation(fields: [userId], references: [id])
+  bookingId String
+  booking   Booking @relation(fields: [bookingId], references: [id])
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  @@map("bookings")
+  @@map("payments")
 }
 
 model Review {
@@ -164,7 +186,6 @@ model Pages {
   @@map("pages")
 }
 
-// subscriber model
 model Subscriber {
   id    String @id @default(uuid())
   email String @unique

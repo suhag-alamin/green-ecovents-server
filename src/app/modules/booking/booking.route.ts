@@ -8,10 +8,23 @@ import { BookingValidation } from './booking.validation';
 const router = express.Router();
 
 router.post(
+  '/create-payment-intents',
+  auth(UserRole.ADMIN, UserRole.SUPER_ADMIN, UserRole.USER),
+  // validateRequest(BookingValidation.createBookingZodSchema),
+  BookingController.createPaymentIntentsController,
+);
+router.post(
   '/',
   auth(UserRole.ADMIN, UserRole.SUPER_ADMIN, UserRole.USER),
   validateRequest(BookingValidation.createBookingZodSchema),
   BookingController.createBookingController,
+);
+
+router.post(
+  '/confirm',
+  auth(UserRole.ADMIN, UserRole.SUPER_ADMIN, UserRole.USER),
+  validateRequest(BookingValidation.confirmBookingZodSchema),
+  BookingController.confirmBookingController,
 );
 
 router.get(

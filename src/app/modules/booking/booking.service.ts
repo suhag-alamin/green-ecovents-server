@@ -7,6 +7,28 @@ import { IPaginationOptions } from '../../../interfaces/pagination';
 import prisma from '../../../shared/prisma';
 import { sendMail } from '../../../shared/utils';
 import { IBookingFilters } from './booking.interface';
+import config from '../../../config';
+import Stripe from 'stripe';
+import ApiError from '../../../errors/ApiError';
+import httpStatus from 'http-status';
+
+const createPaymentIntents = async (data: any) => {
+  const stripe = new Stripe(config.stripe.secret_key as string);
+  const paymentIntent: Stripe.Response<Stripe.PaymentIntent> =
+    await stripe.paymentIntents.create({
+      amount: data.amount,
+      currency: data.currency,
+      payment_method_types: ['card'],
+      receipt_email: data.email,
+    });
+
+  return {
+    paymentId: paymentIntent.id,
+    currency: paymentIntent.currency,
+    amount: paymentIntent.amount / 100,
+    clientSecret: paymentIntent.client_secret,
+  };
+};
 
 const createBooking = async (data: Booking): Promise<Booking> => {
   const result = await prisma.booking.create({
@@ -17,28 +39,113 @@ const createBooking = async (data: Booking): Promise<Booking> => {
     },
   });
 
-  if (result.id) {
-    await sendMail({
-      subject: `Booking Confirmation of - ${result.event?.title}`,
-      to: result.email,
-      message: `
-      <h1>Confirmation of Your Event Booking</h1>
-      <p> <strong>Dear ${result.user?.firstName}</strong> ,</p>
-      <p>We are thrilled to inform you that your event booking has been successfully confirmed! Thank you for choosing GreenEcovents to be a part of your special day.</p>
-      <h3>Event Details:</h3>
-      <p><strong>Event Name:</strong> ${result.event?.title}</p>
-      <p><strong>Date:</strong>: From ${result.startDate} to ${result.endDate} </p>
-      <p><strong>Location:</strong>: ${result.event?.location}</p>
-      <p><strong>Your Booking ID:</strong>: ${result.id}</p>
-      <p>Please keep this email as a reference for your booking. If you have any questions or need to make any changes, don't hesitate to contact our customer support team at contact@greenecovents.com.</p>
-      <p>We look forward to hosting you and ensuring that your event is a memorable experience. Stay tuned for further updates and information as the event date approaches.</p>
-      <p>Best regards,</p>
-      <p>GreenEcovents</p>
-      `,
-    });
-  }
+  // if (result.id) {
+  //   await sendMail({
+  //     subject: `Booking Confirmation of - ${result.event?.title}`,
+  //     to: result.email,
+  //     message: `
+  //     <h1>Confirmation of Your Event Booking</h1>
+  //     <p> <strong>Dear ${result.user?.firstName}</strong> ,</p>
+  //     <p>We are thrilled to inform you that your event booking has been successfully confirmed! Thank you for choosing GreenEcovents to be a part of your special day.</p>
+  //     <h3>Event Details:</h3>
+  //     <p><strong>Event Name:</strong> ${result.event?.title}</p>
+  //     <p><strong>Date:</strong>: From ${result.startDate} to ${result.endDate} </p>
+  //     <p><strong>Location:</strong>: ${result.event?.location}</p>
+  //     <p><strong>Your Booking ID:</strong>: ${result.id}</p>
+  //     <p>Please keep this email as a reference for your booking. If you have any questions or need to make any changes, don't hesitate to contact our customer support team at contact@greenecovents.com.</p>
+  //     <p>We look forward to hosting you and ensuring that your event is a memorable experience. Stay tuned for further updates and information as the event date approaches.</p>
+  //     <p>Best regards,</p>
+  //     <p>GreenEcovents</p>
+  //     `,
+  //   });
+  // }
 
   return result;
+};
+const confirmBooking = async (data: any): Promise<Booking> => {
+  console.log('hiitinng', data);
+  // const result = await prisma.booking.create({
+  //   data,
+  //   include: {
+  //     event: true,
+  //     user: true,
+  //   },
+  // });
+
+  // if (result.id) {
+  //   await sendMail({
+  //     subject: `Booking Confirmation of - ${result.event?.title}`,
+  //     to: result.email,
+  //     message: `
+  //     <h1>Confirmation of Your Event Booking</h1>
+  //     <p> <strong>Dear ${result.user?.firstName}</strong> ,</p>
+  //     <p>We are thrilled to inform you that your event booking has been successfully confirmed! Thank you for choosing GreenEcovents to be a part of your special day.</p>
+  //     <h3>Event Details:</h3>
+  //     <p><strong>Event Name:</strong> ${result.event?.title}</p>
+  //     <p><strong>Date:</strong>: From ${result.startDate} to ${result.endDate} </p>
+  //     <p><strong>Location:</strong>: ${result.event?.location}</p>
+  //     <p><strong>Your Booking ID:</strong>: ${result.id}</p>
+  //     <p>Please keep this email as a reference for your booking. If you have any questions or need to make any changes, don't hesitate to contact our customer support team at contact@greenecovents.com.</p>
+  //     <p>We look forward to hosting you and ensuring that your event is a memorable experience. Stay tuned for further updates and information as the event date approaches.</p>
+  //     <p>Best regards,</p>
+  //     <p>GreenEcovents</p>
+  //     `,
+  //   });
+  // }
+
+  // return result;
+
+  const result = await prisma.$transaction(async transactionClient => {
+    await transactionClient.payment.create({ data });
+
+    const booking = await transactionClient.booking.update({
+      where: {
+        id: data.bookingId,
+      },
+      data: {
+        status: BookingStatus.confirmed,
+      },
+      include: {
+        event: true,
+        user: true,
+      },
+    });
+
+    if (booking.id) {
+      await sendMail({
+        subject: `Booking Confirmation of - ${booking.event?.title}`,
+        to: booking.email,
+        message: `
+        <h1>Confirmation of Your Event Booking</h1>
+        <p> <strong>Dear ${booking.user?.firstName}</strong> ,</p>
+        <p>We are thrilled to inform you that your event booking has been successfully confirmed! Thank you for choosing GreenEcovents to be a part of your special day.</p>
+        <h3>Event Details:</h3>
+        <p><strong>Event Name:</strong> ${booking.event?.title}</p>
+        <p><strong>Date:</strong>: From ${booking.startDate} to ${booking.endDate} </p>
+        <p><strong>Location:</strong>: ${booking.event?.location}</p>
+        <p><strong>Your Booking ID:</strong>: ${booking.id}</p>
+        <p>Please keep this email as a reference for your booking. If you have any questions or need to make any changes, don't hesitate to contact our customer support team at contact@greenecovents.com.</p>
+        <p>We look forward to hosting you and ensuring that your event is a memorable experience. Stay tuned for further updates and information as the event date approaches.</p>
+        <p>Best regards,</p>
+        <p>GreenEcovents</p>
+        `,
+      });
+    }
+
+    return booking;
+  });
+
+  if (result) {
+    return result;
+  }
+
+  throw new ApiError(httpStatus.BAD_REQUEST, 'Unable to confirm booking.');
+};
+
+const getReceipt = async (paymentIntentId: string) => {
+  const stripe = new Stripe(config.stripe.secret_key as string);
+  const paymentIntent = await stripe.paymentIntents.retrieve(paymentIntentId);
+  return paymentIntent;
 };
 
 const getBookings = async (
@@ -321,7 +428,10 @@ const deleteBooking = async (id: string): Promise<Booking | null> => {
 };
 
 export const BookingService = {
+  createPaymentIntents,
   createBooking,
+  confirmBooking,
+  getReceipt,
   getBookings,
   getBookingsByUser,
   getSingleBooking,

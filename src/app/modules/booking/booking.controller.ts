@@ -8,6 +8,18 @@ import sendResponse from '../../../shared/sendResponse';
 import { bookingFilterableFields } from './booking.constant';
 import { BookingService } from './booking.service';
 
+const createPaymentIntentsController = catchAsync(
+  async (req: Request, res: Response) => {
+    const result = await BookingService.createPaymentIntents(req.body);
+
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: 'Client secret for payment intent created successfully!',
+      data: result,
+    });
+  },
+);
 const createBookingController = catchAsync(
   async (req: Request, res: Response) => {
     const result = await BookingService.createBooking(req.body);
@@ -17,6 +29,18 @@ const createBookingController = catchAsync(
       success: true,
       message:
         'Booking confirmed successfully! Please bring the money on the venue. Thanks!',
+      data: result,
+    });
+  },
+);
+const confirmBookingController = catchAsync(
+  async (req: Request, res: Response) => {
+    const result = await BookingService.confirmBooking(req.body);
+
+    sendResponse<Booking>(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: 'Booking confirmed successfully!',
       data: result,
     });
   },
@@ -113,7 +137,9 @@ const deleteBookingController = catchAsync(
 );
 
 export const BookingController = {
+  createPaymentIntentsController,
   createBookingController,
+  confirmBookingController,
   getBookingsController,
   getBookingsByUserController,
   getSingleBookingController,
