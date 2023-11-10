@@ -79,30 +79,29 @@ const confirmBooking = async (data: IConfirmBooking): Promise<Booking> => {
       },
     });
 
-    if (booking.id) {
-      await sendMail({
-        subject: `Booking Confirmation of - ${booking.event?.title}`,
-        to: booking.email,
-        message: `
-        <h1>Confirmation of Your Event Booking</h1>
-        <p> <strong>Dear ${booking.user?.firstName}</strong> ,</p>
-        <p>We are thrilled to inform you that your event booking has been successfully confirmed! Thank you for choosing GreenEcovents to be a part of your special day.</p>
-        <h3>Event Details:</h3>
-        <p><strong>Event Name:</strong> ${booking.event?.title}</p>
-        <p><strong>Date:</strong>: From ${booking.startDate} to ${booking.endDate} </p>
-        <p><strong>Location:</strong>: ${booking.event?.location}</p>
-        <p><strong>Your Booking ID:</strong>: ${booking.id}</p>
-        <p>Please keep this email as a reference for your booking. If you have any questions or need to make any changes, don't hesitate to contact our customer support team at contact@greenecovents.com.</p>
-        <p>We look forward to hosting you and ensuring that your event is a memorable experience. Stay tuned for further updates and information as the event date approaches.</p>
-        <p>Best regards,</p>
-        <p>GreenEcovents</p>
-        `,
-      });
-    }
-
     return booking;
   });
 
+  if (result.id) {
+    await sendMail({
+      subject: `Booking Confirmation of - ${result.event?.title}`,
+      to: result.email,
+      message: `
+      <h1>Confirmation of Your Event Booking</h1>
+      <p> <strong>Dear ${result.user?.firstName}</strong> ,</p>
+      <p>We are thrilled to inform you that your event booking has been successfully confirmed! Thank you for choosing GreenEcovents to be a part of your special day.</p>
+      <h3>Event Details:</h3>
+      <p><strong>Event Name:</strong> ${result.event?.title}</p>
+      <p><strong>Date:</strong>: From ${result.startDate} to ${result.endDate} </p>
+      <p><strong>Location:</strong>: ${result.event?.location}</p>
+      <p><strong>Your Booking ID:</strong>: ${result.id}</p>
+      <p>Please keep this email as a reference for your booking. If you have any questions or need to make any changes, don't hesitate to contact our customer support team at contact@greenecovents.com.</p>
+      <p>We look forward to hosting you and ensuring that your event is a memorable experience. Stay tuned for further updates and information as the event date approaches.</p>
+      <p>Best regards,</p>
+      <p>GreenEcovents</p>
+      `,
+    });
+  }
   if (result) {
     return result;
   }
@@ -412,7 +411,7 @@ const getPaymentDetails = async (paymentIntentId: string) => {
     paymentId: id,
     amount: result?.amount || amount / 100,
     currency,
-    email: result?.user?.email || receipt_email,
+    email: receipt_email,
     name: result?.user?.firstName + ' ' + result?.user?.lastName,
     bookingId: result?.bookingId,
   };

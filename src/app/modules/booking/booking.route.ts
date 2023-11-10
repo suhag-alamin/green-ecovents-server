@@ -10,7 +10,6 @@ const router = express.Router();
 router.post(
   '/create-payment-intents',
   auth(UserRole.ADMIN, UserRole.SUPER_ADMIN, UserRole.USER),
-  // validateRequest(BookingValidation.createBookingZodSchema),
   BookingController.createPaymentIntentsController,
 );
 router.post(
@@ -29,7 +28,6 @@ router.post(
 router.get(
   '/payment-details/:id',
   auth(UserRole.ADMIN, UserRole.SUPER_ADMIN, UserRole.USER),
-  // validateRequest(BookingValidation.confirmBookingZodSchema),
   BookingController.getPaymentDetailsController,
 );
 
@@ -45,7 +43,7 @@ router.get(
 );
 router.get(
   '/:id',
-  auth(UserRole.ADMIN, UserRole.SUPER_ADMIN),
+  auth(UserRole.ADMIN, UserRole.SUPER_ADMIN, UserRole.USER),
   BookingController.getSingleBookingController,
 );
 router.patch(
@@ -61,7 +59,7 @@ router.patch(
 );
 router.delete(
   '/:id',
-  auth(UserRole.ADMIN, UserRole.SUPER_ADMIN),
+  auth(UserRole.ADMIN, UserRole.SUPER_ADMIN, UserRole.USER),
   BookingController.deleteBookingController,
 );
 
