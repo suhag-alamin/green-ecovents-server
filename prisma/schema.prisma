@@ -215,4 +215,5 @@ enum BookingStatus {
   pending
   confirmed
   canceled
+  completed
 }
