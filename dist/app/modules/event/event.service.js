@@ -103,7 +103,11 @@ const getSingleEvent = (id) => __awaiter(void 0, void 0, void 0, function* () {
         include: {
             bookings: true,
             categories: true,
-            reviews: true,
+            reviews: {
+                include: {
+                    user: true,
+                },
+            },
         },
     });
     return result;

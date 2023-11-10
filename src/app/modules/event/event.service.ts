@@ -97,7 +97,11 @@ const getSingleEvent = async (id: string): Promise<Event | null> => {
     include: {
       bookings: true,
       categories: true,
-      reviews: true,
+      reviews: {
+        include: {
+          user: true,
+        },
+      },
     },
   });
   return result;
