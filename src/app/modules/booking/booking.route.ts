@@ -25,6 +25,12 @@ router.post(
   validateRequest(BookingValidation.confirmBookingZodSchema),
   BookingController.confirmBookingController,
 );
+
+router.post(
+  '/get-data',
+  auth(UserRole.ADMIN, UserRole.SUPER_ADMIN),
+  BookingController.getBookingsDataController,
+);
 router.get(
   '/payment-details/:id',
   auth(UserRole.ADMIN, UserRole.SUPER_ADMIN, UserRole.USER),
@@ -36,6 +42,7 @@ router.get(
   auth(UserRole.ADMIN, UserRole.SUPER_ADMIN),
   BookingController.getBookingsController,
 );
+
 router.get(
   '/user',
   auth(UserRole.USER),

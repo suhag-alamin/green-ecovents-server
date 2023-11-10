@@ -148,6 +148,21 @@ const getPaymentDetailsController = catchAsync(
   },
 );
 
+const getBookingsDataController = catchAsync(
+  async (req: Request, res: Response) => {
+    const result = await BookingService.getBookingsData(req.body);
+
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: 'Bookings retrieved successfully!',
+      data: result,
+      // meta: result.meta,
+      // data: result.data,
+    });
+  },
+);
+
 export const BookingController = {
   createPaymentIntentsController,
   createBookingController,
@@ -159,4 +174,5 @@ export const BookingController = {
   cancelBookingController,
   deleteBookingController,
   getPaymentDetailsController,
+  getBookingsDataController,
 };

@@ -118,6 +118,17 @@ const getPaymentDetailsController = (0, catchAsync_1.default)((req, res) => __aw
         data: result,
     });
 }));
+const getBookingsDataController = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield booking_service_1.BookingService.getBookingsData(req.body);
+    (0, sendResponse_1.default)(res, {
+        statusCode: http_status_1.default.OK,
+        success: true,
+        message: 'Bookings retrieved successfully!',
+        data: result,
+        // meta: result.meta,
+        // data: result.data,
+    });
+}));
 exports.BookingController = {
     createPaymentIntentsController,
     createBookingController,
@@ -129,4 +140,5 @@ exports.BookingController = {
     cancelBookingController,
     deleteBookingController,
     getPaymentDetailsController,
+    getBookingsDataController,
 };

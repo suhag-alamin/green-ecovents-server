@@ -79,8 +79,8 @@ const createBooking = (data) => __awaiter(void 0, void 0, void 0, function* () {
     return result;
 });
 const confirmBooking = (data) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a, _b, _c, _d;
     const result = yield prisma_1.default.$transaction((transactionClient) => __awaiter(void 0, void 0, void 0, function* () {
-        var _a, _b, _c, _d;
         yield transactionClient.payment.create({ data });
         const booking = yield transactionClient.booking.update({
             where: {
@@ -94,28 +94,28 @@ const confirmBooking = (data) => __awaiter(void 0, void 0, void 0, function* () 
                 user: true,
             },
         });
-        if (booking.id) {
-            yield (0, utils_1.sendMail)({
-                subject: `Booking Confirmation of - ${(_a = booking.event) === null || _a === void 0 ? void 0 : _a.title}`,
-                to: booking.email,
-                message: `
-        <h1>Confirmation of Your Event Booking</h1>
-        <p> <strong>Dear ${(_b = booking.user) === null || _b === void 0 ? void 0 : _b.firstName}</strong> ,</p>
-        <p>We are thrilled to inform you that your event booking has been successfully confirmed! Thank you for choosing GreenEcovents to be a part of your special day.</p>
-        <h3>Event Details:</h3>
-        <p><strong>Event Name:</strong> ${(_c = booking.event) === null || _c === void 0 ? void 0 : _c.title}</p>
-        <p><strong>Date:</strong>: From ${booking.startDate} to ${booking.endDate} </p>
-        <p><strong>Location:</strong>: ${(_d = booking.event) === null || _d === void 0 ? void 0 : _d.location}</p>
-        <p><strong>Your Booking ID:</strong>: ${booking.id}</p>
-        <p>Please keep this email as a reference for your booking. If you have any questions or need to make any changes, don't hesitate to contact our customer support team at contact@greenecovents.com.</p>
-        <p>We look forward to hosting you and ensuring that your event is a memorable experience. Stay tuned for further updates and information as the event date approaches.</p>
-        <p>Best regards,</p>
-        <p>GreenEcovents</p>
-        `,
-            });
-        }
         return booking;
     }));
+    if (result.id) {
+        yield (0, utils_1.sendMail)({
+            subject: `Booking Confirmation of - ${(_a = result.event) === null || _a === void 0 ? void 0 : _a.title}`,
+            to: result.email,
+            message: `
+      <h1>Confirmation of Your Event Booking</h1>
+      <p> <strong>Dear ${(_b = result.user) === null || _b === void 0 ? void 0 : _b.firstName}</strong> ,</p>
+      <p>We are thrilled to inform you that your event booking has been successfully confirmed! Thank you for choosing GreenEcovents to be a part of your special day.</p>
+      <h3>Event Details:</h3>
+      <p><strong>Event Name:</strong> ${(_c = result.event) === null || _c === void 0 ? void 0 : _c.title}</p>
+      <p><strong>Date:</strong>: From ${result.startDate} to ${result.endDate} </p>
+      <p><strong>Location:</strong>: ${(_d = result.event) === null || _d === void 0 ? void 0 : _d.location}</p>
+      <p><strong>Your Booking ID:</strong>: ${result.id}</p>
+      <p>Please keep this email as a reference for your booking. If you have any questions or need to make any changes, don't hesitate to contact our customer support team at contact@greenecovents.com.</p>
+      <p>We look forward to hosting you and ensuring that your event is a memorable experience. Stay tuned for further updates and information as the event date approaches.</p>
+      <p>Best regards,</p>
+      <p>GreenEcovents</p>
+      `,
+        });
+    }
     if (result) {
         return result;
     }
@@ -364,7 +364,7 @@ const deleteBooking = (id) => __awaiter(void 0, void 0, void 0, function* () {
     return result;
 });
 const getPaymentDetails = (paymentIntentId) => __awaiter(void 0, void 0, void 0, function* () {
-    var _t, _u, _v;
+    var _t, _u;
     if (!paymentIntentId) {
         throw new ApiError_1.default(http_status_1.default.BAD_REQUEST, 'Invalid payment id.');
     }
@@ -383,11 +383,132 @@ const getPaymentDetails = (paymentIntentId) => __awaiter(void 0, void 0, void 0,
         paymentId: id,
         amount: (result === null || result === void 0 ? void 0 : result.amount) || amount / 100,
         currency,
-        email: ((_t = result === null || result === void 0 ? void 0 : result.user) === null || _t === void 0 ? void 0 : _t.email) || receipt_email,
-        name: ((_u = result === null || result === void 0 ? void 0 : result.user) === null || _u === void 0 ? void 0 : _u.firstName) + ' ' + ((_v = result === null || result === void 0 ? void 0 : result.user) === null || _v === void 0 ? void 0 : _v.lastName),
+        email: receipt_email,
+        name: ((_t = result === null || result === void 0 ? void 0 : result.user) === null || _t === void 0 ? void 0 : _t.firstName) + ' ' + ((_u = result === null || result === void 0 ? void 0 : result.user) === null || _u === void 0 ? void 0 : _u.lastName),
         bookingId: result === null || result === void 0 ? void 0 : result.bookingId,
     };
     return paymentDetails;
+});
+const getBookingsData = (
+// timeRange: ITimeRange,
+// year?: number,
+data) => __awaiter(void 0, void 0, void 0, function* () {
+    const { timeRange, year } = data;
+    const now = new Date();
+    let startDate = now;
+    if (timeRange === 'today') {
+        startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    }
+    else if (timeRange === '7days') {
+        startDate = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+    }
+    else if (timeRange === '1month') {
+        startDate = new Date(now.getFullYear(), now.getMonth() - 1, now.getDate());
+    }
+    else if (timeRange === 'year') {
+        startDate = new Date(year || now.getFullYear(), 0, 1);
+    }
+    const monthNames = [
+        'January',
+        'February',
+        'March',
+        'April',
+        'May',
+        'June',
+        'July',
+        'August',
+        'September',
+        'October',
+        'November',
+        'December',
+    ];
+    const dayNames = [
+        'Sunday',
+        'Monday',
+        'Tuesday',
+        'Wednesday',
+        'Thursday',
+        'Friday',
+        'Saturday',
+    ];
+    if (timeRange === 'today') {
+        const hourlyData = [];
+        for (let hour = 0; hour < 24; hour++) {
+            const whereClause = {
+                createdAt: {
+                    gte: new Date(now.getFullYear(), now.getMonth(), now.getDate(), hour),
+                    lt: new Date(now.getFullYear(), now.getMonth(), now.getDate(), hour + 1),
+                },
+            };
+            const bookings = yield prisma_1.default.booking.findMany({
+                where: whereClause,
+                include: {
+                    payments: true,
+                },
+            });
+            const totalBookings = bookings.length;
+            const totalRevenue = bookings.reduce((sum, booking) => sum +
+                booking.payments.reduce((paymentSum, payment) => paymentSum + payment.amount, 0), 0);
+            hourlyData.push({
+                label: `${hour % 12 === 0 ? 12 : hour % 12}${hour < 12 ? 'AM' : 'PM'}`,
+                totalBookings,
+                totalRevenue,
+            });
+        }
+        return hourlyData;
+    }
+    else if (timeRange === 'year') {
+        const monthlyData = [];
+        for (let month = 0; month < 12; month++) {
+            const whereClause = {
+                createdAt: {
+                    gte: new Date(year || now.getFullYear(), month, 1),
+                    lt: new Date(year || now.getFullYear(), month + 1, 1),
+                },
+            };
+            const bookings = yield prisma_1.default.booking.findMany({
+                where: whereClause,
+                include: {
+                    payments: true,
+                },
+            });
+            const totalBookings = bookings.length;
+            const totalRevenue = bookings.reduce((sum, booking) => sum +
+                booking.payments.reduce((paymentSum, payment) => paymentSum + payment.amount, 0), 0);
+            monthlyData.push({
+                label: monthNames[month],
+                totalBookings,
+                totalRevenue,
+            });
+        }
+        return monthlyData;
+    }
+    else {
+        const dailyData = [];
+        for (let date = startDate; date <= now; date.setDate(date.getDate() + 1)) {
+            const whereClause = {
+                createdAt: {
+                    gte: new Date(date.getFullYear(), date.getMonth(), date.getDate()),
+                    lt: new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1),
+                },
+            };
+            const bookings = yield prisma_1.default.booking.findMany({
+                where: whereClause,
+                include: {
+                    payments: true,
+                },
+            });
+            const totalBookings = bookings.length;
+            const totalRevenue = bookings.reduce((sum, booking) => sum +
+                booking.payments.reduce((paymentSum, payment) => paymentSum + payment.amount, 0), 0);
+            dailyData.push({
+                label: `${dayNames[date.getDay()]}, ${date.getDate()} ${monthNames[date.getMonth()]}`,
+                totalBookings,
+                totalRevenue,
+            });
+        }
+        return dailyData;
+    }
 });
 exports.BookingService = {
     createPaymentIntents,
@@ -400,4 +521,5 @@ exports.BookingService = {
     updateBooking,
     cancelBooking,
     deleteBooking,
+    getBookingsData,
 };

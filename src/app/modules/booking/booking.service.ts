@@ -10,7 +10,11 @@ import { IGenericResponse } from '../../../interfaces/common';
 import { IPaginationOptions } from '../../../interfaces/pagination';
 import prisma from '../../../shared/prisma';
 import { sendMail } from '../../../shared/utils';
-import { IBookingFilters, IConfirmBooking } from './booking.interface';
+import {
+  IBookingFilters,
+  IConfirmBooking,
+  IGetBookingsData,
+} from './booking.interface';
 
 const createPaymentIntents = async (data: any) => {
   const stripe = new Stripe(config.stripe.secret_key as string);
@@ -417,6 +421,167 @@ const getPaymentDetails = async (paymentIntentId: string) => {
   };
   return paymentDetails;
 };
+const getBookingsData = async (
+  // timeRange: ITimeRange,
+  // year?: number,
+  data: IGetBookingsData,
+) => {
+  const { timeRange, year } = data;
+
+  const now = new Date();
+  let startDate = now;
+  if (timeRange === 'today') {
+    startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  } else if (timeRange === '7days') {
+    startDate = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+  } else if (timeRange === '1month') {
+    startDate = new Date(now.getFullYear(), now.getMonth() - 1, now.getDate());
+  } else if (timeRange === 'year') {
+    startDate = new Date(year || now.getFullYear(), 0, 1);
+  }
+
+  const monthNames = [
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December',
+  ];
+
+  const dayNames = [
+    'Sunday',
+    'Monday',
+    'Tuesday',
+    'Wednesday',
+    'Thursday',
+    'Friday',
+    'Saturday',
+  ];
+
+  if (timeRange === 'today') {
+    const hourlyData = [];
+    for (let hour = 0; hour < 24; hour++) {
+      const whereClause: Prisma.BookingWhereInput = {
+        createdAt: {
+          gte: new Date(now.getFullYear(), now.getMonth(), now.getDate(), hour),
+          lt: new Date(
+            now.getFullYear(),
+            now.getMonth(),
+            now.getDate(),
+            hour + 1,
+          ),
+        },
+      };
+
+      const bookings = await prisma.booking.findMany({
+        where: whereClause,
+        include: {
+          payments: true,
+        },
+      });
+
+      const totalBookings = bookings.length;
+      const totalRevenue = bookings.reduce(
+        (sum, booking) =>
+          sum +
+          booking.payments.reduce(
+            (paymentSum, payment) => paymentSum + payment.amount,
+            0,
+          ),
+        0,
+      );
+
+      hourlyData.push({
+        label: `${hour % 12 === 0 ? 12 : hour % 12}${hour < 12 ? 'AM' : 'PM'}`,
+        totalBookings,
+        totalRevenue,
+      });
+    }
+
+    return hourlyData;
+  } else if (timeRange === 'year') {
+    const monthlyData = [];
+    for (let month = 0; month < 12; month++) {
+      const whereClause: Prisma.BookingWhereInput = {
+        createdAt: {
+          gte: new Date(year || now.getFullYear(), month, 1),
+          lt: new Date(year || now.getFullYear(), month + 1, 1),
+        },
+      };
+
+      const bookings = await prisma.booking.findMany({
+        where: whereClause,
+        include: {
+          payments: true,
+        },
+      });
+
+      const totalBookings = bookings.length;
+      const totalRevenue = bookings.reduce(
+        (sum, booking) =>
+          sum +
+          booking.payments.reduce(
+            (paymentSum, payment) => paymentSum + payment.amount,
+            0,
+          ),
+        0,
+      );
+
+      monthlyData.push({
+        label: monthNames[month],
+        totalBookings,
+        totalRevenue,
+      });
+    }
+
+    return monthlyData;
+  } else {
+    const dailyData = [];
+    for (let date = startDate; date <= now; date.setDate(date.getDate() + 1)) {
+      const whereClause: Prisma.BookingWhereInput = {
+        createdAt: {
+          gte: new Date(date.getFullYear(), date.getMonth(), date.getDate()),
+          lt: new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1),
+        },
+      };
+
+      const bookings = await prisma.booking.findMany({
+        where: whereClause,
+        include: {
+          payments: true,
+        },
+      });
+
+      const totalBookings = bookings.length;
+      const totalRevenue = bookings.reduce(
+        (sum, booking) =>
+          sum +
+          booking.payments.reduce(
+            (paymentSum, payment) => paymentSum + payment.amount,
+            0,
+          ),
+        0,
+      );
+
+      dailyData.push({
+        label: `${dayNames[date.getDay()]}, ${date.getDate()} ${
+          monthNames[date.getMonth()]
+        }`,
+        totalBookings,
+        totalRevenue,
+      });
+    }
+
+    return dailyData;
+  }
+};
 
 export const BookingService = {
   createPaymentIntents,
@@ -429,4 +594,5 @@ export const BookingService = {
   updateBooking,
   cancelBooking,
   deleteBooking,
+  getBookingsData,
 };
