@@ -385,12 +385,40 @@ const cancelBooking = async (
 };
 
 const deleteBooking = async (id: string): Promise<Booking | null> => {
-  const result = await prisma.booking.delete({
-    where: {
-      id,
-    },
+  const result = await prisma.$transaction(async transactionClient => {
+    const isBookingExist = await transactionClient.booking.findUnique({
+      where: {
+        id,
+      },
+      include: {
+        payments: true,
+      },
+    });
+
+    if (!isBookingExist) {
+      throw new ApiError(httpStatus.BAD_REQUEST, 'The booking does not exist.');
+    }
+
+    // delete payments by id
+    await transactionClient.payment.deleteMany({
+      where: {
+        bookingId: isBookingExist.id,
+      },
+    });
+
+    const booking = await transactionClient.booking.delete({
+      where: {
+        id: isBookingExist.id,
+      },
+    });
+
+    return booking;
   });
-  return result;
+  if (result) {
+    return result;
+  }
+
+  throw new ApiError(httpStatus.BAD_REQUEST, 'Unable to delete booking');
 };
 
 const getPaymentDetails = async (paymentIntentId: string) => {

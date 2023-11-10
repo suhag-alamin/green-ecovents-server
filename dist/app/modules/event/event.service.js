@@ -123,12 +123,6 @@ const updateEvent = (id, data) => __awaiter(void 0, void 0, void 0, function* ()
     return result;
 });
 const deleteEvent = (id) => __awaiter(void 0, void 0, void 0, function* () {
-    // const result = await prisma.event.delete({
-    //   where: {
-    //     id,
-    //   },
-    // });
-    // return result;
     const result = yield prisma_1.default.$transaction((transactionClient) => __awaiter(void 0, void 0, void 0, function* () {
         const isEventExist = yield transactionClient.event.findUnique({
             where: {

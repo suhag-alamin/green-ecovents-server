@@ -119,13 +119,6 @@ const updateEvent = async (id: string, data: Event): Promise<Event | null> => {
 };
 
 const deleteEvent = async (id: string): Promise<Event | null> => {
-  // const result = await prisma.event.delete({
-  //   where: {
-  //     id,
-  //   },
-  // });
-  // return result;
-
   const result = await prisma.$transaction(async transactionClient => {
     const isEventExist = await transactionClient.event.findUnique({
       where: {

@@ -356,12 +356,35 @@ const cancelBooking = (id, user) => __awaiter(void 0, void 0, void 0, function* 
     return result;
 });
 const deleteBooking = (id) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield prisma_1.default.booking.delete({
-        where: {
-            id,
-        },
-    });
-    return result;
+    const result = yield prisma_1.default.$transaction((transactionClient) => __awaiter(void 0, void 0, void 0, function* () {
+        const isBookingExist = yield transactionClient.booking.findUnique({
+            where: {
+                id,
+            },
+            include: {
+                payments: true,
+            },
+        });
+        if (!isBookingExist) {
+            throw new ApiError_1.default(http_status_1.default.BAD_REQUEST, 'The booking does not exist.');
+        }
+        // delete payments by id
+        yield transactionClient.payment.deleteMany({
+            where: {
+                bookingId: isBookingExist.id,
+            },
+        });
+        const booking = yield transactionClient.booking.delete({
+            where: {
+                id: isBookingExist.id,
+            },
+        });
+        return booking;
+    }));
+    if (result) {
+        return result;
+    }
+    throw new ApiError_1.default(http_status_1.default.BAD_REQUEST, 'Unable to delete booking');
 });
 const getPaymentDetails = (paymentIntentId) => __awaiter(void 0, void 0, void 0, function* () {
     var _t, _u;
