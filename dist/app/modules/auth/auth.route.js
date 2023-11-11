@@ -15,4 +15,6 @@ router.post('/signup', (0, validateRequest_1.default)(auth_validation_1.AuthVali
 router.post('/login', (0, validateRequest_1.default)(auth_validation_1.AuthValidation.loginZodSchema), auth_controller_1.AuthController.loginController);
 router.post('/refresh-token', (0, validateRequest_1.default)(auth_validation_1.AuthValidation.refreshTokenZodSchema), auth_controller_1.AuthController.refreshTokenController);
 router.patch('/change-password', (0, validateRequest_1.default)(auth_validation_1.AuthValidation.changePasswordZodSchema), (0, auth_1.default)(client_1.UserRole.SUPER_ADMIN, client_1.UserRole.ADMIN, client_1.UserRole.USER), auth_controller_1.AuthController.changePasswordController);
+// logout route
+router.post('/logout', (0, auth_1.default)(client_1.UserRole.SUPER_ADMIN, client_1.UserRole.ADMIN, client_1.UserRole.USER), auth_controller_1.AuthController.logoutController);
 exports.AuthRoutes = router;

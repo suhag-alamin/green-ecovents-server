@@ -30,4 +30,11 @@ router.patch(
   AuthController.changePasswordController,
 );
 
+// logout route
+router.post(
+  '/logout',
+  auth(UserRole.SUPER_ADMIN, UserRole.ADMIN, UserRole.USER),
+  AuthController.logoutController,
+);
+
 export const AuthRoutes = router;

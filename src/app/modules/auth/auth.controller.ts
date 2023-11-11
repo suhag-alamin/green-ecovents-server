@@ -69,9 +69,25 @@ const changePasswordController = catchAsync(
   },
 );
 
+// logout and remove refresh token from cookie
+const logoutController = catchAsync(async (req: Request, res: Response) => {
+  // const { refreshToken } = req.cookies;
+
+  // await AuthService.logout(refreshToken);
+
+  res.clearCookie('refreshToken');
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'User logged out successfully',
+  });
+});
+
 export const AuthController = {
   signupController,
   loginController,
   refreshTokenController,
   changePasswordController,
+  logoutController,
 };
