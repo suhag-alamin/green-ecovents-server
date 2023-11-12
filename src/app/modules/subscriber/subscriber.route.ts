@@ -9,7 +9,6 @@ const router = express.Router();
 
 router.post(
   '/',
-  auth(UserRole.ADMIN, UserRole.SUPER_ADMIN),
   validateRequest(SubscriberValidation.addSubscriberZodSchema),
   SubscriberController.addSubscriberController,
 );
@@ -21,7 +20,11 @@ router.post(
   SubscriberController.sendEmailToSubscribersController,
 );
 
-router.get('/', SubscriberController.getSubscribersController);
+router.get(
+  '/',
+  auth(UserRole.ADMIN, UserRole.SUPER_ADMIN),
+  SubscriberController.getSubscribersController,
+);
 
 router.delete(
   '/:id',
