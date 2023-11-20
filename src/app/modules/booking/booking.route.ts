@@ -9,7 +9,8 @@ const router = express.Router();
 
 router.post(
   '/create-payment-intents',
-  auth(UserRole.ADMIN, UserRole.SUPER_ADMIN, UserRole.USER),
+  auth(UserRole.USER),
+  validateRequest(BookingValidation.createPaymentIntentsZodSchema),
   BookingController.createPaymentIntentsController,
 );
 router.post(

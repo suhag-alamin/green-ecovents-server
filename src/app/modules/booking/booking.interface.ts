@@ -15,3 +15,9 @@ export type IGetBookingsData = {
   timeRange: ITimeRange;
   year?: number;
 };
+
+export type IPaymentData = {
+  amount: number;
+  currency: string;
+  email: string;
+};

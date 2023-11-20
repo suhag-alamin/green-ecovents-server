@@ -20,11 +20,7 @@ router.get(
   ReviewController.getReviewsByUserController,
 );
 
-router.get(
-  '/',
-  // auth(UserRole.ADMIN, UserRole.SUPER_ADMIN, UserRole.USER),
-  ReviewController.getReviewsController,
-);
+router.get('/', ReviewController.getReviewsController);
 
 router.get(
   '/:id',

@@ -14,16 +14,8 @@ router.post(
   EventController.createEventController,
 );
 
-router.get(
-  '/',
-  // auth(UserRole.ADMIN, UserRole.SUPER_ADMIN),
-  EventController.getEventsController,
-);
-router.get(
-  '/:id',
-  // auth(UserRole.ADMIN, UserRole.SUPER_ADMIN),
-  EventController.getSingleEventController,
-);
+router.get('/', EventController.getEventsController);
+router.get('/:id', EventController.getSingleEventController);
 router.patch(
   '/:id',
   auth(UserRole.ADMIN, UserRole.SUPER_ADMIN),

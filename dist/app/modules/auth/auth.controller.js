@@ -76,8 +76,6 @@ const changePasswordController = (0, catchAsync_1.default)((req, res) => __await
 }));
 // logout and remove refresh token from cookie
 const logoutController = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    // const { refreshToken } = req.cookies;
-    // await AuthService.logout(refreshToken);
     res.clearCookie('refreshToken');
     (0, sendResponse_1.default)(res, {
         statusCode: http_status_1.default.OK,

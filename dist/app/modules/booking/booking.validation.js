@@ -78,8 +78,22 @@ const confirmBookingZodSchema = zod_1.z.object({
         }),
     }),
 });
+const createPaymentIntentsZodSchema = zod_1.z.object({
+    body: zod_1.z.object({
+        amount: zod_1.z.number({
+            required_error: 'Amount is required',
+        }),
+        currency: zod_1.z.string({
+            required_error: 'Currency is required',
+        }),
+        email: zod_1.z.string({
+            required_error: 'Email is required',
+        }),
+    }),
+});
 exports.BookingValidation = {
     createBookingZodSchema,
     updateBookingZodSchema,
     confirmBookingZodSchema,
+    createPaymentIntentsZodSchema,
 };

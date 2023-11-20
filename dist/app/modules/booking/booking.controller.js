@@ -125,8 +125,6 @@ const getBookingsDataController = (0, catchAsync_1.default)((req, res) => __awai
         success: true,
         message: 'Bookings retrieved successfully!',
         data: result,
-        // meta: result.meta,
-        // data: result.data,
     });
 }));
 exports.BookingController = {

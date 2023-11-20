@@ -4,6 +4,7 @@ import httpStatus from 'http-status';
 import { JwtPayload } from 'jsonwebtoken';
 import Stripe from 'stripe';
 import config from '../../../config';
+import { dayNames, monthNames } from '../../../constants/global';
 import ApiError from '../../../errors/ApiError';
 import { paginationHelpers } from '../../../helpers/paginationHelper';
 import { IGenericResponse } from '../../../interfaces/common';
@@ -14,9 +15,10 @@ import {
   IBookingFilters,
   IConfirmBooking,
   IGetBookingsData,
+  IPaymentData,
 } from './booking.interface';
 
-const createPaymentIntents = async (data: any) => {
+const createPaymentIntents = async (data: IPaymentData) => {
   const stripe = new Stripe(config.stripe.secret_key as string);
   const paymentIntent: Stripe.Response<Stripe.PaymentIntent> =
     await stripe.paymentIntents.create({
@@ -42,27 +44,6 @@ const createBooking = async (data: Booking): Promise<Booking> => {
       user: true,
     },
   });
-
-  // if (result.id) {
-  //   await sendMail({
-  //     subject: `Booking Confirmation of - ${result.event?.title}`,
-  //     to: result.email,
-  //     message: `
-  //     <h1>Confirmation of Your Event Booking</h1>
-  //     <p> <strong>Dear ${result.user?.firstName}</strong> ,</p>
-  //     <p>We are thrilled to inform you that your event booking has been successfully confirmed! Thank you for choosing GreenEcovents to be a part of your special day.</p>
-  //     <h3>Event Details:</h3>
-  //     <p><strong>Event Name:</strong> ${result.event?.title}</p>
-  //     <p><strong>Date:</strong>: From ${result.startDate} to ${result.endDate} </p>
-  //     <p><strong>Location:</strong>: ${result.event?.location}</p>
-  //     <p><strong>Your Booking ID:</strong>: ${result.id}</p>
-  //     <p>Please keep this email as a reference for your booking. If you have any questions or need to make any changes, don't hesitate to contact our customer support team at contact@greenecovents.com.</p>
-  //     <p>We look forward to hosting you and ensuring that your event is a memorable experience. Stay tuned for further updates and information as the event date approaches.</p>
-  //     <p>Best regards,</p>
-  //     <p>GreenEcovents</p>
-  //     `,
-  //   });
-  // }
 
   return result;
 };
@@ -188,16 +169,6 @@ const getBookingsByUser = async (
       userId: user?.id,
     },
   });
-  // andConditions.push({
-  //   OR: [
-  //     {
-  //       status: BookingStatus.pending,
-  //     },
-  //     {
-  //       status: BookingStatus.confirmed,
-  //     },
-  //   ],
-  // });
 
   if (Object.keys(filtersData).length) {
     andConditions.push({
@@ -449,11 +420,7 @@ const getPaymentDetails = async (paymentIntentId: string) => {
   };
   return paymentDetails;
 };
-const getBookingsData = async (
-  // timeRange: ITimeRange,
-  // year?: number,
-  data: IGetBookingsData,
-) => {
+const getBookingsData = async (data: IGetBookingsData) => {
   const { timeRange, year } = data;
 
   const now = new Date();
@@ -467,31 +434,6 @@ const getBookingsData = async (
   } else if (timeRange === 'year') {
     startDate = new Date(year || now.getFullYear(), 0, 1);
   }
-
-  const monthNames = [
-    'January',
-    'February',
-    'March',
-    'April',
-    'May',
-    'June',
-    'July',
-    'August',
-    'September',
-    'October',
-    'November',
-    'December',
-  ];
-
-  const dayNames = [
-    'Sunday',
-    'Monday',
-    'Tuesday',
-    'Wednesday',
-    'Thursday',
-    'Friday',
-    'Saturday',
-  ];
 
   if (timeRange === 'today') {
     const hourlyData = [];

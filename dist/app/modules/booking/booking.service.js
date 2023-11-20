@@ -29,6 +29,7 @@ const client_1 = require("@prisma/client");
 const http_status_1 = __importDefault(require("http-status"));
 const stripe_1 = __importDefault(require("stripe"));
 const config_1 = __importDefault(require("../../../config"));
+const global_1 = require("../../../constants/global");
 const ApiError_1 = __importDefault(require("../../../errors/ApiError"));
 const paginationHelper_1 = require("../../../helpers/paginationHelper");
 const prisma_1 = __importDefault(require("../../../shared/prisma"));
@@ -56,26 +57,6 @@ const createBooking = (data) => __awaiter(void 0, void 0, void 0, function* () {
             user: true,
         },
     });
-    // if (result.id) {
-    //   await sendMail({
-    //     subject: `Booking Confirmation of - ${result.event?.title}`,
-    //     to: result.email,
-    //     message: `
-    //     <h1>Confirmation of Your Event Booking</h1>
-    //     <p> <strong>Dear ${result.user?.firstName}</strong> ,</p>
-    //     <p>We are thrilled to inform you that your event booking has been successfully confirmed! Thank you for choosing GreenEcovents to be a part of your special day.</p>
-    //     <h3>Event Details:</h3>
-    //     <p><strong>Event Name:</strong> ${result.event?.title}</p>
-    //     <p><strong>Date:</strong>: From ${result.startDate} to ${result.endDate} </p>
-    //     <p><strong>Location:</strong>: ${result.event?.location}</p>
-    //     <p><strong>Your Booking ID:</strong>: ${result.id}</p>
-    //     <p>Please keep this email as a reference for your booking. If you have any questions or need to make any changes, don't hesitate to contact our customer support team at contact@greenecovents.com.</p>
-    //     <p>We look forward to hosting you and ensuring that your event is a memorable experience. Stay tuned for further updates and information as the event date approaches.</p>
-    //     <p>Best regards,</p>
-    //     <p>GreenEcovents</p>
-    //     `,
-    //   });
-    // }
     return result;
 });
 const confirmBooking = (data) => __awaiter(void 0, void 0, void 0, function* () {
@@ -178,16 +159,6 @@ const getBookingsByUser = (filters, paginationOptions, user) => __awaiter(void 0
             userId: user === null || user === void 0 ? void 0 : user.id,
         },
     });
-    // andConditions.push({
-    //   OR: [
-    //     {
-    //       status: BookingStatus.pending,
-    //     },
-    //     {
-    //       status: BookingStatus.confirmed,
-    //     },
-    //   ],
-    // });
     if (Object.keys(filtersData).length) {
         andConditions.push({
             AND: Object.keys(filtersData).map(key => {
@@ -412,10 +383,7 @@ const getPaymentDetails = (paymentIntentId) => __awaiter(void 0, void 0, void 0,
     };
     return paymentDetails;
 });
-const getBookingsData = (
-// timeRange: ITimeRange,
-// year?: number,
-data) => __awaiter(void 0, void 0, void 0, function* () {
+const getBookingsData = (data) => __awaiter(void 0, void 0, void 0, function* () {
     const { timeRange, year } = data;
     const now = new Date();
     let startDate = now;
@@ -431,29 +399,6 @@ data) => __awaiter(void 0, void 0, void 0, function* () {
     else if (timeRange === 'year') {
         startDate = new Date(year || now.getFullYear(), 0, 1);
     }
-    const monthNames = [
-        'January',
-        'February',
-        'March',
-        'April',
-        'May',
-        'June',
-        'July',
-        'August',
-        'September',
-        'October',
-        'November',
-        'December',
-    ];
-    const dayNames = [
-        'Sunday',
-        'Monday',
-        'Tuesday',
-        'Wednesday',
-        'Thursday',
-        'Friday',
-        'Saturday',
-    ];
     if (timeRange === 'today') {
         const hourlyData = [];
         for (let hour = 0; hour < 24; hour++) {
@@ -499,7 +444,7 @@ data) => __awaiter(void 0, void 0, void 0, function* () {
             const totalRevenue = bookings.reduce((sum, booking) => sum +
                 booking.payments.reduce((paymentSum, payment) => paymentSum + payment.amount, 0), 0);
             monthlyData.push({
-                label: monthNames[month],
+                label: global_1.monthNames[month],
                 totalBookings,
                 totalRevenue,
             });
@@ -525,7 +470,7 @@ data) => __awaiter(void 0, void 0, void 0, function* () {
             const totalRevenue = bookings.reduce((sum, booking) => sum +
                 booking.payments.reduce((paymentSum, payment) => paymentSum + payment.amount, 0), 0);
             dailyData.push({
-                label: `${dayNames[date.getDay()]}, ${date.getDate()} ${monthNames[date.getMonth()]}`,
+                label: `${global_1.dayNames[date.getDay()]}, ${date.getDate()} ${global_1.monthNames[date.getMonth()]}`,
                 totalBookings,
                 totalRevenue,
             });

@@ -11,7 +11,7 @@ const client_1 = require("@prisma/client");
 const booking_controller_1 = require("./booking.controller");
 const booking_validation_1 = require("./booking.validation");
 const router = express_1.default.Router();
-router.post('/create-payment-intents', (0, auth_1.default)(client_1.UserRole.ADMIN, client_1.UserRole.SUPER_ADMIN, client_1.UserRole.USER), booking_controller_1.BookingController.createPaymentIntentsController);
+router.post('/create-payment-intents', (0, auth_1.default)(client_1.UserRole.USER), (0, validateRequest_1.default)(booking_validation_1.BookingValidation.createPaymentIntentsZodSchema), booking_controller_1.BookingController.createPaymentIntentsController);
 router.post('/', (0, auth_1.default)(client_1.UserRole.ADMIN, client_1.UserRole.SUPER_ADMIN, client_1.UserRole.USER), (0, validateRequest_1.default)(booking_validation_1.BookingValidation.createBookingZodSchema), booking_controller_1.BookingController.createBookingController);
 router.post('/confirm', (0, auth_1.default)(client_1.UserRole.ADMIN, client_1.UserRole.SUPER_ADMIN, client_1.UserRole.USER), (0, validateRequest_1.default)(booking_validation_1.BookingValidation.confirmBookingZodSchema), booking_controller_1.BookingController.confirmBookingController);
 router.post('/get-data', (0, auth_1.default)(client_1.UserRole.ADMIN, client_1.UserRole.SUPER_ADMIN), booking_controller_1.BookingController.getBookingsDataController);

@@ -14,16 +14,8 @@ router.post(
   CategoryController.createCategoryController,
 );
 
-router.get(
-  '/',
-  // auth(UserRole.ADMIN, UserRole.SUPER_ADMIN),
-  CategoryController.getCategoriesController,
-);
-router.get(
-  '/:id',
-  // auth(UserRole.ADMIN, UserRole.SUPER_ADMIN),
-  CategoryController.getSingleCategoryController,
-);
+router.get('/', CategoryController.getCategoriesController);
+router.get('/:id', CategoryController.getSingleCategoryController);
 router.patch(
   '/:id',
   auth(UserRole.ADMIN, UserRole.SUPER_ADMIN),

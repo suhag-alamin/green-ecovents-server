@@ -157,8 +157,6 @@ const getBookingsDataController = catchAsync(
       success: true,
       message: 'Bookings retrieved successfully!',
       data: result,
-      // meta: result.meta,
-      // data: result.data,
     });
   },
 );
