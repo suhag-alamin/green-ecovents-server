@@ -1,0 +1,362 @@
+{
+  "statusCode": 200,
+  "success": true,
+  "message": "Events retrieved successfully!",
+  "meta": {
+    "total": 18,
+    "page": 1,
+    "limit": 10
+  },
+  "data": [
+    {
+      "id": "36fb0066-5099-459d-bc04-74c0611bce05",
+      "title": "Organic Farming Bootcamp",
+      "description": "Get your hands dirty in sustainable agriculture. Farm stays, composting lessons, and organic cooking workshops. It's an immersive eco-farming experience.",
+      "startDate": "2024-06-01T12:42:59.000Z",
+      "endDate": "2025-06-30T12:42:45.000Z",
+      "location": "GreenSprout Farm, Burlington, VT",
+      "price": 120,
+      "image": "https://res.cloudinary.com/dkw1ovah4/image/upload/v1697892186/green-ecovents/z7lydcavltcakb6uyij7.jpg",
+      "status": "upcoming",
+      "userId": "36b521ee-742e-41c2-b4ad-a8782d556426",
+      "categoryId": "934c646b-aaad-47be-b131-316b331ac040",
+      "createdAt": "2023-10-21T12:43:07.003Z",
+      "updatedAt": "2023-11-10T16:38:28.175Z",
+      "bookings": [],
+      "categories": {
+        "id": "934c646b-aaad-47be-b131-316b331ac040",
+        "name": "Sustainable Workshops and Retreats",
+        "createdAt": "2023-10-21T10:08:42.611Z",
+        "updatedAt": "2023-10-21T10:08:42.611Z"
+      },
+      "reviews": []
+    },
+    {
+      "id": "ecddede9-dc27-49aa-8c31-b757d237b8e8",
+      "title": "Eco Yoga Retreat",
+      "description": "Find balance in nature. Yoga, meditation, and eco-conscious living. Solar-powered lodging, plant-based dining, and mindfulness in the wild.",
+      "startDate": "2023-11-01T12:41:34.000Z",
+      "endDate": "2024-11-30T12:41:48.000Z",
+      "location": "Mountain Zen Retreat, Sedona, AZ",
+      "price": 90,
+      "image": "https://res.cloudinary.com/dkw1ovah4/image/upload/v1697892134/green-ecovents/owh3s4xbidv8xj5o91ku.jpg",
+      "status": "ongoing",
+      "userId": "36b521ee-742e-41c2-b4ad-a8782d556426",
+      "categoryId": "934c646b-aaad-47be-b131-316b331ac040",
+      "createdAt": "2023-10-21T12:42:14.660Z",
+      "updatedAt": "2023-11-10T16:38:48.849Z",
+      "bookings": [
+        {
+          "id": "eb05c383-8e45-419f-978c-1f4bc2e766b8",
+          "status": "confirmed",
+          "startDate": "2023-11-14T12:41:34.000Z",
+          "endDate": "2023-11-16T09:48:38.000Z",
+          "adults": 20,
+          "childrens": 10,
+          "email": "user@gmail.com",
+          "contactNo": "01854659875",
+          "daysBooked": 1,
+          "totalAmount": 2475,
+          "userId": "125e28eb-16d7-41ae-b902-53193f5e412b",
+          "eventId": "ecddede9-dc27-49aa-8c31-b757d237b8e8",
+          "createdAt": "2023-11-11T09:49:05.946Z",
+          "updatedAt": "2023-11-11T09:49:15.537Z"
+        },
+        {
+          "id": "1d127286-9021-4aaa-a6cb-d4347910f597",
+          "status": "canceled",
+          "startDate": "2023-11-21T17:59:59.000Z",
+          "endDate": "2023-11-27T13:03:41.000Z",
+          "adults": 2,
+          "childrens": 1,
+          "email": "user@gmail.com",
+          "contactNo": "01854659875",
+          "daysBooked": 5,
+          "totalAmount": 1237.5,
+          "userId": "125e28eb-16d7-41ae-b902-53193f5e412b",
+          "eventId": "ecddede9-dc27-49aa-8c31-b757d237b8e8",
+          "createdAt": "2023-11-12T13:03:58.401Z",
+          "updatedAt": "2023-11-21T07:44:49.124Z"
+        }
+      ],
+      "categories": {
+        "id": "934c646b-aaad-47be-b131-316b331ac040",
+        "name": "Sustainable Workshops and Retreats",
+        "createdAt": "2023-10-21T10:08:42.611Z",
+        "updatedAt": "2023-10-21T10:08:42.611Z"
+      },
+      "reviews": [
+        {
+          "id": "5c75dee2-44db-4bdf-83c6-121c0bca6f2c",
+          "review": "It was a nice Event!",
+          "rating": 5,
+          "userId": "bac56f43-c4c7-4ef1-85bc-dfe1aff00049",
+          "eventId": "ecddede9-dc27-49aa-8c31-b757d237b8e8",
+          "createdAt": "2023-11-06T06:13:53.159Z",
+          "updatedAt": "2023-11-06T06:13:53.159Z"
+        },
+        {
+          "id": "680dff72-e059-4de0-b4eb-34285c4c0f56",
+          "review": "Great workshop done by GreenEcovents!",
+          "rating": 5,
+          "userId": "61c210da-94f6-4d46-b882-805e6a51cf36",
+          "eventId": "ecddede9-dc27-49aa-8c31-b757d237b8e8",
+          "createdAt": "2023-11-07T17:30:07.693Z",
+          "updatedAt": "2023-11-07T17:30:07.693Z"
+        }
+      ]
+    },
+    {
+      "id": "c9b65420-fc1a-475d-b64a-5452251df4ab",
+      "title": "Permaculture Design Workshop",
+      "description": "Dive into permaculture. Hands-on gardening, organic farming visits, and sustainability workshops. It's a green thumb's paradise.",
+      "startDate": "2023-11-01T12:40:41.000Z",
+      "endDate": "2024-07-31T12:40:46.000Z",
+      "location": "PermaGrow Farms, Santa Cruz, CA",
+      "price": 75,
+      "image": "https://res.cloudinary.com/dkw1ovah4/image/upload/v1697892061/green-ecovents/sdv39b5lyhoyq9ty73bw.jpg",
+      "status": "ongoing",
+      "userId": "36b521ee-742e-41c2-b4ad-a8782d556426",
+      "categoryId": "934c646b-aaad-47be-b131-316b331ac040",
+      "createdAt": "2023-10-21T12:41:02.252Z",
+      "updatedAt": "2023-11-10T16:39:01.724Z",
+      "bookings": [
+        {
+          "id": "0e9f1b08-a9aa-4a12-9457-868e053dd68c",
+          "status": "completed",
+          "startDate": "2023-11-29T12:40:41.000Z",
+          "endDate": "2023-12-01T13:23:39.000Z",
+          "adults": 3,
+          "childrens": 1,
+          "email": "user@gmail.com",
+          "contactNo": "01854659875",
+          "daysBooked": 2,
+          "totalAmount": 577.5,
+          "userId": "125e28eb-16d7-41ae-b902-53193f5e412b",
+          "eventId": "c9b65420-fc1a-475d-b64a-5452251df4ab",
+          "createdAt": "2023-11-12T13:23:47.425Z",
+          "updatedAt": "2023-11-12T13:29:48.487Z"
+        },
+        {
+          "id": "d8112ae5-50d7-418c-ab9a-f9f91d04585e",
+          "status": "confirmed",
+          "startDate": "2023-11-24T17:48:49.000Z",
+          "endDate": "2023-11-25T18:00:00.000Z",
+          "adults": 1,
+          "childrens": 0,
+          "email": "user@gmail.com",
+          "contactNo": "01854659875",
+          "daysBooked": 1,
+          "totalAmount": 82.5,
+          "userId": "125e28eb-16d7-41ae-b902-53193f5e412b",
+          "eventId": "c9b65420-fc1a-475d-b64a-5452251df4ab",
+          "createdAt": "2023-11-24T12:18:14.494Z",
+          "updatedAt": "2023-11-24T12:18:33.468Z"
+        },
+        {
+          "id": "95a36337-5924-4b2d-98c0-366fc3b9b347",
+          "status": "canceled",
+          "startDate": "2023-11-22T12:40:41.000Z",
+          "endDate": "2023-11-27T09:45:37.000Z",
+          "adults": 3,
+          "childrens": 1,
+          "email": "user@gmail.com",
+          "contactNo": "01854659875",
+          "daysBooked": 4,
+          "totalAmount": 1155,
+          "userId": "125e28eb-16d7-41ae-b902-53193f5e412b",
+          "eventId": "c9b65420-fc1a-475d-b64a-5452251df4ab",
+          "createdAt": "2023-11-11T09:47:36.582Z",
+          "updatedAt": "2023-11-24T12:20:59.953Z"
+        }
+      ],
+      "categories": {
+        "id": "934c646b-aaad-47be-b131-316b331ac040",
+        "name": "Sustainable Workshops and Retreats",
+        "createdAt": "2023-10-21T10:08:42.611Z",
+        "updatedAt": "2023-10-21T10:08:42.611Z"
+      },
+      "reviews": [
+        {
+          "id": "317ab2f0-e29c-48c9-8c50-bcd8ecba1a4f",
+          "review": "Very good service",
+          "rating": 5,
+          "userId": "125e28eb-16d7-41ae-b902-53193f5e412b",
+          "eventId": "c9b65420-fc1a-475d-b64a-5452251df4ab",
+          "createdAt": "2023-10-24T06:34:25.586Z",
+          "updatedAt": "2023-10-24T06:34:25.586Z"
+        },
+        {
+          "id": "689ec0f3-1380-40ac-95db-41ac1df09a47",
+          "review": "Good Service",
+          "rating": 5,
+          "userId": "125e28eb-16d7-41ae-b902-53193f5e412b",
+          "eventId": "c9b65420-fc1a-475d-b64a-5452251df4ab",
+          "createdAt": "2023-11-04T09:50:25.230Z",
+          "updatedAt": "2023-11-04T09:50:25.230Z"
+        }
+      ]
+    },
+    {
+      "id": "290e40c9-a1ab-46ce-b8fa-81410b07079e",
+      "title": "Eco-Adventure Family Retreat",
+      "description": "Enjoy nature with the family. Eco-cabins, sustainable farming, and outdoor adventures. It's a green retreat for all ages.",
+      "startDate": "2024-01-01T12:39:42.000Z",
+      "endDate": "2025-01-31T12:39:56.000Z",
+      "location": "Great Smoky Mountains, Gatlinburg, TN",
+      "price": 150,
+      "image": "https://res.cloudinary.com/dkw1ovah4/image/upload/v1697892011/green-ecovents/me26qsjkfarhnir5ghdy.jpg",
+      "status": "upcoming",
+      "userId": "36b521ee-742e-41c2-b4ad-a8782d556426",
+      "categoryId": "d668cdc3-80a7-4ad6-901c-3b864a353b66",
+      "createdAt": "2023-10-21T12:40:12.016Z",
+      "updatedAt": "2023-11-10T16:39:15.277Z",
+      "bookings": [],
+      "categories": {
+        "id": "d668cdc3-80a7-4ad6-901c-3b864a353b66",
+        "name": "Eco-Tours and Nature Retreats",
+        "createdAt": "2023-10-21T10:08:30.892Z",
+        "updatedAt": "2023-10-21T10:08:30.892Z"
+      },
+      "reviews": []
+    },
+    {
+      "id": "f367f09e-44e7-4b6c-8f5f-e47e510e403a",
+      "title": "Wildlife Photography Retreat",
+      "description": "Capture stunning wildlife with your camera. Sustainable travel, birdwatching, and solar-powered accommodations. It's a nature photographer's dream.",
+      "startDate": "2024-01-01T12:36:04.000Z",
+      "endDate": "2025-04-30T12:36:10.000Z",
+      "location": "Serengeti National Park, Tanzania",
+      "price": 250,
+      "image": "https://res.cloudinary.com/dkw1ovah4/image/upload/v1697891838/green-ecovents/pp39oi643gag8ftl3gva.jpg",
+      "status": "upcoming",
+      "userId": "36b521ee-742e-41c2-b4ad-a8782d556426",
+      "categoryId": "d668cdc3-80a7-4ad6-901c-3b864a353b66",
+      "createdAt": "2023-10-21T12:37:18.353Z",
+      "updatedAt": "2023-11-10T16:39:32.590Z",
+      "bookings": [],
+      "categories": {
+        "id": "d668cdc3-80a7-4ad6-901c-3b864a353b66",
+        "name": "Eco-Tours and Nature Retreats",
+        "createdAt": "2023-10-21T10:08:30.892Z",
+        "updatedAt": "2023-10-21T10:08:30.892Z"
+      },
+      "reviews": []
+    },
+    {
+      "id": "22dd14e9-d7d0-4926-afc9-958f046b9c23",
+      "title": "Jungle Adventure Expedition",
+      "description": "Dive into the heart of the jungle on this wildlife-focused adventure. Responsible tourism, eco-lodges, and tree planting make it an unforgettable eco-experience.",
+      "startDate": "2024-01-01T12:36:04.000Z",
+      "endDate": "2025-04-30T12:36:10.000Z",
+      "location": "Amazon Rainforest, Brazil",
+      "price": 350,
+      "image": "https://res.cloudinary.com/dkw1ovah4/image/upload/v1697891800/green-ecovents/swhzrw3w2xgqm2jupgxq.jpg",
+      "status": "upcoming",
+      "userId": "36b521ee-742e-41c2-b4ad-a8782d556426",
+      "categoryId": "d668cdc3-80a7-4ad6-901c-3b864a353b66",
+      "createdAt": "2023-10-21T12:36:40.550Z",
+      "updatedAt": "2023-11-10T16:39:48.865Z",
+      "bookings": [],
+      "categories": {
+        "id": "d668cdc3-80a7-4ad6-901c-3b864a353b66",
+        "name": "Eco-Tours and Nature Retreats",
+        "createdAt": "2023-10-21T10:08:30.892Z",
+        "updatedAt": "2023-10-21T10:08:30.892Z"
+      },
+      "reviews": []
+    },
+    {
+      "id": "bb67550a-8250-4586-8113-eb5723327dd0",
+      "title": "Green Graduation Party",
+      "description": "Celebrate graduation with an eco-conscious twist. Sustainable decor, zero-waste menu, and educational talks on sustainable living. It's a graduation for a greener future.",
+      "startDate": "2024-01-01T17:59:59.000Z",
+      "endDate": "2024-12-31T17:59:59.000Z",
+      "location": " EcoHub Pavilion, San Diego, CA",
+      "price": 150,
+      "image": "https://res.cloudinary.com/dkw1ovah4/image/upload/v1697891716/green-ecovents/dd3r57jrp7e02pplxzb2.jpg",
+      "status": "upcoming",
+      "userId": "36b521ee-742e-41c2-b4ad-a8782d556426",
+      "categoryId": "d8216e18-352f-467e-a53f-6e30bb3397ba",
+      "createdAt": "2023-10-21T12:35:16.945Z",
+      "updatedAt": "2023-11-10T16:40:07.188Z",
+      "bookings": [],
+      "categories": {
+        "id": "d8216e18-352f-467e-a53f-6e30bb3397ba",
+        "name": "Zero-Waste Parties",
+        "createdAt": "2023-10-21T10:08:19.414Z",
+        "updatedAt": "2023-10-21T10:08:19.414Z"
+      },
+      "reviews": []
+    },
+    {
+      "id": "d7f67ce9-2ae6-4af7-b217-db69fb220cfc",
+      "title": "Zero-Waste Baby Shower",
+      "description": "Embrace sustainability at your baby shower. Biodegradable decor, waste-reducing games, and plantable seed favors. It's an eco-friendly welcome for the new arrival.",
+      "startDate": "2023-12-31T18:00:59.000Z",
+      "endDate": "2024-12-31T17:59:59.000Z",
+      "location": "Nature's Nest Event Space, Raleigh, NC",
+      "price": 200,
+      "image": "https://res.cloudinary.com/dkw1ovah4/image/upload/v1697891645/green-ecovents/axzu3uilfn7bhjwrwdmw.jpg",
+      "status": "ongoing",
+      "userId": "36b521ee-742e-41c2-b4ad-a8782d556426",
+      "categoryId": "d8216e18-352f-467e-a53f-6e30bb3397ba",
+      "createdAt": "2023-10-21T12:34:05.254Z",
+      "updatedAt": "2023-11-12T13:27:35.078Z",
+      "bookings": [],
+      "categories": {
+        "id": "d8216e18-352f-467e-a53f-6e30bb3397ba",
+        "name": "Zero-Waste Parties",
+        "createdAt": "2023-10-21T10:08:19.414Z",
+        "updatedAt": "2023-10-21T10:08:19.414Z"
+      },
+      "reviews": []
+    },
+    {
+      "id": "65f4f0a3-c941-4e0a-bdbc-035c1c9db3bb",
+      "title": "Sustainable Birthday Bash",
+      "description": "Celebrate with minimal waste. Reusable decorations, vegetarian and vegan catering, and a focus on eco-conscious partying. It's a zero-waste birthday extravaganza.",
+      "startDate": "2023-12-31T18:00:59.000Z",
+      "endDate": "2024-12-31T17:59:59.000Z",
+      "location": "GreenJoy Party Venue, Denver, CO",
+      "price": 130,
+      "image": "https://res.cloudinary.com/dkw1ovah4/image/upload/v1697891605/green-ecovents/xcscpeofbltlv4h3vhwz.jpg",
+      "status": "upcoming",
+      "userId": "36b521ee-742e-41c2-b4ad-a8782d556426",
+      "categoryId": "d8216e18-352f-467e-a53f-6e30bb3397ba",
+      "createdAt": "2023-10-21T12:33:25.972Z",
+      "updatedAt": "2023-11-10T16:40:26.420Z",
+      "bookings": [],
+      "categories": {
+        "id": "d8216e18-352f-467e-a53f-6e30bb3397ba",
+        "name": "Zero-Waste Parties",
+        "createdAt": "2023-10-21T10:08:19.414Z",
+        "updatedAt": "2023-10-21T10:08:19.414Z"
+      },
+      "reviews": []
+    },
+    {
+      "id": "d31f9c32-48d3-423a-969d-e86cc0175b86",
+      "title": "Community Green Gathering",
+      "description": "Gather with your community for an eco-conscious event. Enjoy sustainable food, activities, and eco-art installations. It's a celebration of local sustainability.",
+      "startDate": "2024-02-05T12:32:05.000Z",
+      "endDate": "2025-02-28T12:32:11.000Z",
+      "location": "Greenfields Park, Chicago, IL",
+      "price": 100,
+      "image": "https://res.cloudinary.com/dkw1ovah4/image/upload/v1697891538/green-ecovents/iyeoajkhnm7oswrxnzd2.jpg",
+      "status": "upcoming",
+      "userId": "36b521ee-742e-41c2-b4ad-a8782d556426",
+      "categoryId": "c6e421c2-dbc9-40d2-b258-456e2d347da8",
+      "createdAt": "2023-10-21T12:32:18.450Z",
+      "updatedAt": "2023-11-10T16:40:40.136Z",
+      "bookings": [],
+      "categories": {
+        "id": "c6e421c2-dbc9-40d2-b258-456e2d347da8",
+        "name": "Sustainable Festivals",
+        "createdAt": "2023-10-18T05:20:03.346Z",
+        "updatedAt": "2023-10-18T05:20:03.346Z"
+      },
+      "reviews": []
+    }
+  ]
+}
