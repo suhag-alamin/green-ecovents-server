@@ -1,6 +1,7 @@
 # GreenEcovents Back End
 
-View the live site [here](https://green-ecovents.vercel.app).
+View the live site [here](https://green-ecovents.vercel.app). <br>
+View the API documentation [here](https://documenter.getpostman.com/view/22433617/2s9YeEdCwV).
 
 Welcome to the GreenEcovents Back End repository! This is the solo-developed server-side implementation of the GreenEcovents project, an event management web application.
 
