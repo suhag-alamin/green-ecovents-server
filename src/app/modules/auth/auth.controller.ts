@@ -69,6 +69,33 @@ const changePasswordController = catchAsync(
   },
 );
 
+const forgetPasswordController = catchAsync(
+  async (req: Request, res: Response) => {
+    const result = await AuthService.forgetPassword(req.body);
+
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message:
+        'We have sent you a code to your email address please check it and enter it here.',
+      data: result,
+    });
+  },
+);
+
+const resetPasswordController = catchAsync(
+  async (req: Request, res: Response) => {
+    await AuthService.resetPassword(req.body);
+
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message:
+        'Password reset successfully. Please login with your new password.',
+    });
+  },
+);
+
 // logout and remove refresh token from cookie
 const logoutController = catchAsync(async (req: Request, res: Response) => {
   res.clearCookie('refreshToken');
@@ -86,4 +113,6 @@ export const AuthController = {
   refreshTokenController,
   changePasswordController,
   logoutController,
+  forgetPasswordController,
+  resetPasswordController,
 };

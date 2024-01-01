@@ -14,6 +14,8 @@ export default {
     expires_in: process.env.JWT_EXPIRATION,
     refresh_secret: process.env.JWT_REFRESH_SECRET,
     refresh_expires_in: process.env.JWT_REFRESH_EXPIRATION,
+    reset_secret: process.env.JWT_RESET_SECRET,
+    reset_expires_in: process.env.JWT_RESET_EXPIRATION,
   },
   email: {
     user: process.env.EMAIL_USER,
@@ -24,4 +26,8 @@ export default {
     secret_key: process.env.STRIPE_SECRET_KEY,
     public_key: process.env.STRIPE_PUBLISHABLE_KEY,
   },
+  client_url:
+    process.env.NODE_ENV === 'production'
+      ? process.env.CLIENT_URL
+      : 'http://localhost:3000/reset-password?',
 };

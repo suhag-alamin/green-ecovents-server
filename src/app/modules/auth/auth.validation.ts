@@ -64,9 +64,22 @@ const changePasswordZodSchema = z.object({
     }),
   }),
 });
+
+const forgetPasswordZodSchema = z.object({
+  body: z.object({
+    email: z
+      .string({
+        required_error: 'Email address is required',
+      })
+      .email({
+        message: 'Use valid email address',
+      }),
+  }),
+});
 export const AuthValidation = {
   signupZodSchema,
   loginZodSchema,
   refreshTokenZodSchema,
   changePasswordZodSchema,
+  forgetPasswordZodSchema,
 };

@@ -23,11 +23,24 @@ router.post(
   validateRequest(AuthValidation.refreshTokenZodSchema),
   AuthController.refreshTokenController,
 );
+
 router.patch(
   '/change-password',
   validateRequest(AuthValidation.changePasswordZodSchema),
   auth(UserRole.SUPER_ADMIN, UserRole.ADMIN, UserRole.USER),
   AuthController.changePasswordController,
+);
+// forget password route
+router.post(
+  '/forget-password',
+  validateRequest(AuthValidation.forgetPasswordZodSchema),
+  AuthController.forgetPasswordController,
+);
+// reset password route
+router.post(
+  '/reset-password',
+  // validateRequest(AuthValidation.forgetPasswordZodSchema),
+  AuthController.resetPasswordController,
 );
 
 // logout route
