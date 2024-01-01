@@ -1,9 +1,9 @@
-import express from 'express';
-import { AuthController } from './auth.controller';
-import validateRequest from '../../middlewares/validateRequest';
-import { AuthValidation } from './auth.validation';
-import auth from '../../middlewares/auth';
 import { UserRole } from '@prisma/client';
+import express from 'express';
+import auth from '../../middlewares/auth';
+import validateRequest from '../../middlewares/validateRequest';
+import { AuthController } from './auth.controller';
+import { AuthValidation } from './auth.validation';
 
 const router = express.Router();
 
@@ -39,7 +39,7 @@ router.post(
 // reset password route
 router.post(
   '/reset-password',
-  // validateRequest(AuthValidation.forgetPasswordZodSchema),
+  validateRequest(AuthValidation.resetPasswordZodSchema),
   AuthController.resetPasswordController,
 );
 
