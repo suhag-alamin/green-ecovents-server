@@ -221,7 +221,7 @@ const forgetPassword = async (data: { email: string }): Promise<void> => {
         <h2 style="color: #3BA27A;">Password Reset Request</h2>
         <p>Hello,</p>
         <p>We received a request to reset your password. Click the button below to set a new password. If you did not make this request, please ignore this email.</p>
-        <a href="${url}/reset-password/${token}" style="background-color: #3BA27A; color: #EDF4ED; text-decoration: none; padding: 10px 20px; margin: 15px 0; display: inline-block; border-radius: 8px;">Reset Password</a>
+        <a href="${url}" style="background-color: #3BA27A; color: #EDF4ED; text-decoration: none; padding: 10px 20px; margin: 15px 0; display: inline-block; border-radius: 8px;">Reset Password</a>
         <p>Note: This link will expire in 5 minutes.</p>
         <p>Best Regards,</p>
         <p>GreenEcovents</p>

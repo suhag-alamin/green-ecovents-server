@@ -7,6 +7,13 @@ import { AuthValidation } from './auth.validation';
 
 const router = express.Router();
 
+// reset password route
+router.post(
+  '/reset-password',
+  validateRequest(AuthValidation.resetPasswordZodSchema),
+  AuthController.resetPasswordController,
+);
+
 router.post(
   '/signup',
   validateRequest(AuthValidation.signupZodSchema),
@@ -16,6 +23,13 @@ router.post(
   '/login',
   validateRequest(AuthValidation.loginZodSchema),
   AuthController.loginController,
+);
+
+// forget password route
+router.post(
+  '/forget-password',
+  validateRequest(AuthValidation.forgetPasswordZodSchema),
+  AuthController.forgetPasswordController,
 );
 
 router.post(
@@ -29,18 +43,6 @@ router.patch(
   validateRequest(AuthValidation.changePasswordZodSchema),
   auth(UserRole.SUPER_ADMIN, UserRole.ADMIN, UserRole.USER),
   AuthController.changePasswordController,
-);
-// forget password route
-router.post(
-  '/forget-password',
-  validateRequest(AuthValidation.forgetPasswordZodSchema),
-  AuthController.forgetPasswordController,
-);
-// reset password route
-router.post(
-  '/reset-password',
-  validateRequest(AuthValidation.resetPasswordZodSchema),
-  AuthController.resetPasswordController,
 );
 
 // logout route

@@ -71,14 +71,13 @@ const changePasswordController = catchAsync(
 
 const forgetPasswordController = catchAsync(
   async (req: Request, res: Response) => {
-    const result = await AuthService.forgetPassword(req.body);
+    await AuthService.forgetPassword(req.body);
 
     sendResponse(res, {
       statusCode: httpStatus.OK,
       success: true,
       message:
-        'We have sent you a code to your email address please check it and enter it here.',
-      data: result,
+        'We have sent you a code to your email address please check it and use it to reset your password',
     });
   },
 );
